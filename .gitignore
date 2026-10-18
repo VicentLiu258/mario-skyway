@@ -1,0 +1,16 @@
+.DS_Store
+node_modules/
+.vercel/
+.env
+.env.*
+*.log
+*.blend1
+*.zip
+__pycache__/
+cocos/library/
+cocos/temp/
+cocos/local/
+cocos/profiles/
+cocos/build/
+
+cocos/settings/v2/packages/information.json

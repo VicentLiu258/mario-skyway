@@ -1,0 +1,7 @@
+{
+  "meshes": 24,
+  "vertices": 26024,
+  "rig": "Rigid hierarchical pivots: Body, Head, Arm_L/R, Leg_L/R",
+  "forward": "glTF +Z; Blender -Y",
+  "height": 3.55
+}

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "node tools/verify-web.cjs",
+  "installCommand": "echo Static-Cocos-build",
+  "outputDirectory": "web"
+}

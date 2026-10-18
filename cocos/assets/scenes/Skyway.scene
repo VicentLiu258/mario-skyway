@@ -1,0 +1,157 @@
+[
+  {
+    "__type__": "cc.SceneAsset",
+    "_name": "Skyway",
+    "_objFlags": 0,
+    "_native": "",
+    "scene": {
+      "__id__": 1
+    }
+  },
+  {
+    "__type__": "cc.Scene",
+    "_name": "Skyway",
+    "_objFlags": 0,
+    "_parent": null,
+    "_children": [
+      {
+        "__id__": 2
+      }
+    ],
+    "_active": true,
+    "_components": [],
+    "_prefab": null,
+    "autoReleaseAssets": false,
+    "_globals": {
+      "__id__": 4
+    },
+    "_id": "3954b46a-4d9d-4d65-9c76-9e7ae53d305c"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "MarioRunner",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 1
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 3
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 1073741824,
+    "_mobility": 0,
+    "_id": "runner-root"
+  },
+  {
+    "__type__": "53ac2YFf2FI85/3hSzHW5dQ",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 2
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_id": "runner-component",
+    "worldMaterial": {
+      "__uuid__": "c23b5101-07ce-4876-95ed-9cc51dce1c84",
+      "__expectedType__": "cc.Material"
+    }
+  },
+  {
+    "__type__": "cc.SceneGlobals",
+    "ambient": {
+      "__id__": 5
+    },
+    "shadows": {
+      "__id__": 6
+    },
+    "_skybox": {
+      "__id__": 7
+    },
+    "fog": {
+      "__id__": 8
+    }
+  },
+  {
+    "__type__": "cc.AmbientInfo",
+    "_skyColorHDR": {
+      "__type__": "cc.Vec4",
+      "x": 0.75,
+      "y": 0.85,
+      "z": 1,
+      "w": 1
+    },
+    "_skyColorLDR": {
+      "__type__": "cc.Vec4",
+      "x": 0.75,
+      "y": 0.85,
+      "z": 1,
+      "w": 1
+    },
+    "_skyIllumHDR": 20000,
+    "_skyIllumLDR": 20000,
+    "_groundAlbedoHDR": {
+      "__type__": "cc.Vec4",
+      "x": 0.55,
+      "y": 0.52,
+      "z": 0.42,
+      "w": 1
+    },
+    "_groundAlbedoLDR": {
+      "__type__": "cc.Vec4",
+      "x": 0.55,
+      "y": 0.52,
+      "z": 0.42,
+      "w": 1
+    }
+  },
+  {
+    "__type__": "cc.ShadowsInfo",
+    "_enabled": false,
+    "_type": 0
+  },
+  {
+    "__type__": "cc.SkyboxInfo",
+    "_enabled": false,
+    "_useIBL": false,
+    "_isRGBE": false
+  },
+  {
+    "__type__": "cc.FogInfo",
+    "_enabled": true,
+    "_type": 0,
+    "_fogColor": {
+      "__type__": "cc.Color",
+      "r": 171,
+      "g": 218,
+      "b": 224,
+      "a": 255
+    },
+    "_fogStart": 35,
+    "_fogEnd": 110,
+    "_fogDensity": 0.01
+  }
+]

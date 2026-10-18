@@ -1,0 +1,14 @@
+{
+  "Luigi": {
+    "meshes": 24,
+    "vertices": 25784
+  },
+  "Wario": {
+    "meshes": 25,
+    "vertices": 26024
+  },
+  "Toad": {
+    "meshes": 13,
+    "vertices": 10788
+  }
+}

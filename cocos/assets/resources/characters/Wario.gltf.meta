@@ -1,0 +1,753 @@
+{
+  "ver": "2.3.14",
+  "importer": "gltf",
+  "imported": true,
+  "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0",
+  "files": [],
+  "subMetas": {
+    "68353": {
+      "importer": "gltf-material",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@68353",
+      "displayName": "",
+      "id": "68353",
+      "name": "Boot leather.material",
+      "userData": {
+        "gltfIndex": 12
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "e8415": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@e8415",
+      "displayName": "",
+      "id": "e8415",
+      "name": "Sphere.006.mesh",
+      "userData": {
+        "gltfIndex": 0,
+        "triangleCount": 952
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "81d61": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@81d61",
+      "displayName": "",
+      "id": "81d61",
+      "name": "Sphere.007.mesh",
+      "userData": {
+        "gltfIndex": 1,
+        "triangleCount": 2856
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "1bdaa": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@1bdaa",
+      "displayName": "",
+      "id": "1bdaa",
+      "name": "Glove stitch.mesh",
+      "userData": {
+        "gltfIndex": 2,
+        "triangleCount": 720
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "ea855": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@ea855",
+      "displayName": "",
+      "id": "ea855",
+      "name": "Sphere.014.mesh",
+      "userData": {
+        "gltfIndex": 3,
+        "triangleCount": 952
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "e6662": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@e6662",
+      "displayName": "",
+      "id": "e6662",
+      "name": "Sphere.015.mesh",
+      "userData": {
+        "gltfIndex": 4,
+        "triangleCount": 2856
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "401a2": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@401a2",
+      "displayName": "",
+      "id": "401a2",
+      "name": "Glove stitch.003.mesh",
+      "userData": {
+        "gltfIndex": 5,
+        "triangleCount": 720
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "825ed": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@825ed",
+      "displayName": "",
+      "id": "825ed",
+      "name": "Sphere.mesh",
+      "userData": {
+        "gltfIndex": 6,
+        "triangleCount": 952
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "597d3": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@597d3",
+      "displayName": "",
+      "id": "597d3",
+      "name": "Sphere.002.mesh",
+      "userData": {
+        "gltfIndex": 7,
+        "triangleCount": 1904
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "b778f": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@b778f",
+      "displayName": "",
+      "id": "b778f",
+      "name": "Back strap.mesh",
+      "userData": {
+        "gltfIndex": 8,
+        "triangleCount": 2476
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "37d37": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@37d37",
+      "displayName": "",
+      "id": "37d37",
+      "name": "Sphere.043.mesh",
+      "userData": {
+        "gltfIndex": 9,
+        "triangleCount": 1904
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9cf9": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@f9cf9",
+      "displayName": "",
+      "id": "f9cf9",
+      "name": "Sphere.044.mesh",
+      "userData": {
+        "gltfIndex": 10,
+        "triangleCount": 1432
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "34f63": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@34f63",
+      "displayName": "",
+      "id": "34f63",
+      "name": "Sphere.027.mesh",
+      "userData": {
+        "gltfIndex": 11,
+        "triangleCount": 5712
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "a65aa": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@a65aa",
+      "displayName": "",
+      "id": "a65aa",
+      "name": "Sphere.018.mesh",
+      "userData": {
+        "gltfIndex": 12,
+        "triangleCount": 3816
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "ae664": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@ae664",
+      "displayName": "",
+      "id": "ae664",
+      "name": "Sphere.022.mesh",
+      "userData": {
+        "gltfIndex": 13,
+        "triangleCount": 1904
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "7869b": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@7869b",
+      "displayName": "",
+      "id": "7869b",
+      "name": "Sphere.025.mesh",
+      "userData": {
+        "gltfIndex": 14,
+        "triangleCount": 1904
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "0690b": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@0690b",
+      "displayName": "",
+      "id": "0690b",
+      "name": "Sphere.036.mesh",
+      "userData": {
+        "gltfIndex": 15,
+        "triangleCount": 7616
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "b7d95": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@b7d95",
+      "displayName": "",
+      "id": "b7d95",
+      "name": "M emblem.mesh",
+      "userData": {
+        "gltfIndex": 16,
+        "triangleCount": 960
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "8c573": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@8c573",
+      "displayName": "",
+      "id": "8c573",
+      "name": "Sphere.020.mesh",
+      "userData": {
+        "gltfIndex": 17,
+        "triangleCount": 4760
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "1ae2d": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@1ae2d",
+      "displayName": "",
+      "id": "1ae2d",
+      "name": "Smile.mesh",
+      "userData": {
+        "gltfIndex": 18,
+        "triangleCount": 480
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "dcd31": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@dcd31",
+      "displayName": "",
+      "id": "dcd31",
+      "name": "Sphere.005.mesh",
+      "userData": {
+        "gltfIndex": 19,
+        "triangleCount": 952
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "50c97": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@50c97",
+      "displayName": "",
+      "id": "50c97",
+      "name": "Sphere.003.mesh",
+      "userData": {
+        "gltfIndex": 20,
+        "triangleCount": 952
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "d22d1": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@d22d1",
+      "displayName": "",
+      "id": "d22d1",
+      "name": "Boot seam.mesh",
+      "userData": {
+        "gltfIndex": 21,
+        "triangleCount": 1432
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "9883f": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@9883f",
+      "displayName": "",
+      "id": "9883f",
+      "name": "Sphere.013.mesh",
+      "userData": {
+        "gltfIndex": 22,
+        "triangleCount": 952
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "2ca62": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@2ca62",
+      "displayName": "",
+      "id": "2ca62",
+      "name": "Sphere.011.mesh",
+      "userData": {
+        "gltfIndex": 23,
+        "triangleCount": 952
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "8966d": {
+      "importer": "gltf-mesh",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@8966d",
+      "displayName": "",
+      "id": "8966d",
+      "name": "Boot seam.001.mesh",
+      "userData": {
+        "gltfIndex": 24,
+        "triangleCount": 1432
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "6039b": {
+      "importer": "gltf-material",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@6039b",
+      "displayName": "",
+      "id": "6039b",
+      "name": "Cap & shirt | vermilion.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "e7359": {
+      "importer": "gltf-material",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@e7359",
+      "displayName": "",
+      "id": "e7359",
+      "name": "Gloves & emblem | ivory.material",
+      "userData": {
+        "gltfIndex": 1
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "2efa5": {
+      "importer": "gltf-material",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@2efa5",
+      "displayName": "",
+      "id": "2efa5",
+      "name": "Soles.material",
+      "userData": {
+        "gltfIndex": 2
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "8b40d": {
+      "importer": "gltf-material",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@8b40d",
+      "displayName": "",
+      "id": "8b40d",
+      "name": "Gold details.material",
+      "userData": {
+        "gltfIndex": 3
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "d8b3b": {
+      "importer": "gltf-material",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@d8b3b",
+      "displayName": "",
+      "id": "d8b3b",
+      "name": "Overalls | cobalt.material",
+      "userData": {
+        "gltfIndex": 4
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "da017": {
+      "importer": "gltf-material",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@da017",
+      "displayName": "",
+      "id": "da017",
+      "name": "Cap seam.material",
+      "userData": {
+        "gltfIndex": 5
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "b5675": {
+      "importer": "gltf-material",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@b5675",
+      "displayName": "",
+      "id": "b5675",
+      "name": "Hair | cocoa.material",
+      "userData": {
+        "gltfIndex": 6
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "69f34": {
+      "importer": "gltf-material",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@69f34",
+      "displayName": "",
+      "id": "69f34",
+      "name": "Inner ears.material",
+      "userData": {
+        "gltfIndex": 7
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "a7e72": {
+      "importer": "gltf-material",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@a7e72",
+      "displayName": "",
+      "id": "a7e72",
+      "name": "Iris | azure.material",
+      "userData": {
+        "gltfIndex": 8
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "1af7e": {
+      "importer": "gltf-material",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@1af7e",
+      "displayName": "",
+      "id": "1af7e",
+      "name": "Mustache & pupils.material",
+      "userData": {
+        "gltfIndex": 9
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "af982": {
+      "importer": "gltf-material",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@af982",
+      "displayName": "",
+      "id": "af982",
+      "name": "Skin | peach.material",
+      "userData": {
+        "gltfIndex": 10
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "03547": {
+      "importer": "gltf-material",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@03547",
+      "displayName": "",
+      "id": "03547",
+      "name": "Smile.material",
+      "userData": {
+        "gltfIndex": 11
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "b7080": {
+      "importer": "gltf-scene",
+      "uuid": "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@b7080",
+      "displayName": "",
+      "id": "b7080",
+      "name": "Wario.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [],
+    "lods": {
+      "enable": false,
+      "hasBuiltinLOD": false,
+      "options": [
+        {
+          "screenRatio": 0.25,
+          "faceCount": 1
+        },
+        {
+          "screenRatio": 0.125,
+          "faceCount": 0.25
+        },
+        {
+          "screenRatio": 0.01,
+          "faceCount": 0.1
+        }
+      ]
+    },
+    "assetFinder": {
+      "meshes": [
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@e8415",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@81d61",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@1bdaa",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@ea855",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@e6662",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@401a2",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@825ed",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@597d3",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@b778f",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@37d37",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@f9cf9",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@34f63",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@a65aa",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@ae664",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@7869b",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@0690b",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@b7d95",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@8c573",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@1ae2d",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@dcd31",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@50c97",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@d22d1",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@9883f",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@2ca62",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@8966d"
+      ],
+      "skeletons": [],
+      "textures": [],
+      "materials": [
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@6039b",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@e7359",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@2efa5",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@8b40d",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@d8b3b",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@da017",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@b5675",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@69f34",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@a7e72",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@1af7e",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@af982",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@03547",
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@68353"
+      ],
+      "scenes": [
+        "ab8125de-1cf5-41e1-b48e-b9427e4e1fb0@b7080"
+      ]
+    }
+  }
+}

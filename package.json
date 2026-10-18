@@ -1,0 +1,12 @@
+{
+  "name": "mario-skyway",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Blender characters and a Cocos Creator three-world runner",
+  "scripts": {
+    "test": "node tools/test-rules.cjs && node tools/test-keyboard.cjs",
+    "build": "node tools/verify-web.cjs",
+    "prepare:web": "python3 tools/prepare_web.py"
+  },
+  "devDependencies": { "typescript": "5.8.2" }
+}
