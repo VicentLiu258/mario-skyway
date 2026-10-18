@@ -25,6 +25,8 @@
 
 ## 立即试玩
 
+线上正式版：**[mario.aiboomprompt.com](https://mario.aiboomprompt.com)**（Vercel 托管，HTTPS）。
+
 双击本目录的 **启动试玩.command**。浏览器会自动打开本机试玩地址，保持终端窗口开启即可游玩。关闭终端或按 Ctrl+C 停止服务。
 
 如果 macOS 没有直接运行脚本，可在终端进入本目录后执行：
@@ -81,7 +83,7 @@ python3 tools/serve.py
 
 新增角色与原角色一样使用物件关节动画，没有蒙皮骨骼。角色比例不同但障碍碰撞范围一致，避免体型造成隐性难度。
 
-当前交付为本地浏览器试玩版。HUD 使用 HTML/CSS，声音使用 Web Audio；若发布原生 App 或微信小游戏，需要把界面和音效层移植为 Cocos 原生组件。
+当前交付为浏览器游戏，提供线上正式版与本地试玩包。HUD 使用 HTML/CSS，声音使用 Web Audio；若发布原生 App 或微信小游戏，需要把界面和音效层移植为 Cocos 原生组件。
 
 ## 重新构建
 
@@ -109,7 +111,9 @@ node tools/test-keyboard.cjs
 
 ## GitHub / Vercel 发布
 
-源码仓库：`VicentLiu258/mario-skyway`（私有）。网站目标：`https://mario.aiboomprompt.com`。
+源码仓库：[VicentLiu258/mario-skyway](https://github.com/VicentLiu258/mario-skyway)（私有）。正式网站：[mario.aiboomprompt.com](https://mario.aiboomprompt.com)。
+
+Vercel 项目：[mario-skyway](https://vercel.com/vicente-lius-projects/mario-skyway)。生产分支为 `main`，已连接 GitHub 自动部署。GoDaddy DNS 新增 `mario` 的 CNAME，指向 `dbfbb66ee2d0d72b.vercel-dns-017.com`（TTL 30 分钟）；Vercel 已确认解析正确。
 
 `web/` 保存已在本机用 Cocos Creator 构建的静态运行文件，Vercel 执行 `node tools/verify-web.cjs` 校验 SHA-256 清单后发布该目录。云端无需安装 Cocos 或 Blender，编辑器缓存、日志和本机配置不进入仓库。
 
