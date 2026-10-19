@@ -2,7 +2,7 @@ export const LANE = 2.4;
 export const JUMP_SPEED = 10.6;
 export const GRAVITY = 23;
 export const WORLD_LENGTH = 400;
-export const FINISH_DISTANCE = WORLD_LENGTH * 3;
+export const SLIDE_DURATION = .85;
 export const ROW_GAP = 20;
 export const CHARACTERS = [
     { id: 'Mario', name: '马力欧', tag: '均衡冒险家', skill: '每收集 30 枚金币回复 1 格生命', color: '#e95043', badge: 'M', jump: 10.6, turn: 15, magnet: .8, hearts: 3, path: 'mario/Mario/Mario' },
@@ -14,10 +14,14 @@ export const WORLDS = [
     { name: '蘑菇花园', english: 'GREEN GARDEN', hint: '追随金币换道，遇到整排砖块就起跳', road: '#ead7aa', grass: '#73bd68', sky: '#abdae0', accent: '#398761' },
     { name: '管道工厂', english: 'PIPE WORKS', hint: '蓝色横梁要下滑，绿色水管要跳过或绕行', road: '#acbec2', grass: '#549a97', sky: '#99c6d0', accent: '#287b93' },
     { name: '熔岩城堡', english: 'LAVA CASTLE', hint: '火焰横杆要跳跃，连续组合考验反应', road: '#776e85', grass: '#cf694a', sky: '#d9a7a0', accent: '#bd573f' },
+    { name: '冰雪山谷', english: 'FROST VALLEY', hint: '冰晶阵左右穿梭，冰桥下滑后准备起跳', road: '#c5e5ed', grass: '#e5f5f4', sky: '#acd2e9', accent: '#457eae' },
+    { name: '沙漠遗迹', english: 'DUNE RUINS', hint: '绕过仙人掌，遗迹横梁与石阶交替出现', road: '#e8c18a', grass: '#cf9b61', sky: '#f1d6b0', accent: '#ae7440' },
+    { name: '星光天路', english: 'STAR HIGHWAY', hint: '跳滑交替的最终试炼，金币指引安全路线', road: '#aaa5d1', grass: '#7775ac', sky: '#545b91', accent: '#7661ba' },
 ];
+export const FINISH_DISTANCE = WORLD_LENGTH * WORLDS.length;
 export type RowPlan = { lanes: number[]; safe: number; kind: string; action: 'run'|'jump'|'slide'; bonus: boolean };
 export function worldAt(distance: number, endless = false): number {
-    return endless ? Math.floor(Math.max(0, distance) / WORLD_LENGTH) % 3 : Math.min(2, Math.floor(Math.max(0, distance) / WORLD_LENGTH));
+    return endless ? Math.floor(Math.max(0, distance) / WORLD_LENGTH) % WORLDS.length : Math.min(WORLDS.length - 1, Math.floor(Math.max(0, distance) / WORLD_LENGTH));
 }
 export function runSpeed(distance: number, endless = false): number {
     return Math.min(endless ? 24 : 22, 12 + distance / 100 + (endless ? 2 : 0));
@@ -31,20 +35,39 @@ export function overlaps(x: number, y: number, lane: number, z: number, height: 
 }
 export function hazardHit(kind: string, x: number, y: number, lane: number, z: number, sliding: boolean): boolean {
     if (kind === 'gate') return Math.abs(x - lane * LANE) < .78 && Math.abs(z) < .78 && !(sliding && y < .05);
-    return overlaps(x, y, lane, z, kind === 'pipe' ? 1.65 : kind === 'fire' ? 1.05 : kind === 'crate' ? .96 : .9);
+    return overlaps(x, y, lane, z, (kind === 'pipe' || kind === 'cactus') ? 1.65 : kind === 'fire' ? 1.05 : (kind === 'crate' || kind === 'ice') ? .96 : .9);
 }
 export function pattern(index: number, world = 0): RowPlan {
-    // Authored eight-row phrases: lane reading → action → recovery → reward.
-    const phrase = index % 10;
-    const safe = [-1, 0, 1, 0, -1, 0, 1, 0, -1, 1][phrase];
-    const bonus = phrase === 9;
+    // Ten-row phrases retain recovery rows. Alternate phrases mirror the slalom
+    // so a 400 m chapter has two distinct arrangements without blind random walls.
+    const phrase = index % 10, mirror = Math.floor(index / 10) % 2 ? -1 : 1;
+    const routes = [
+        [-1,0,1,0,-1,0,1,0,-1,0], [1,0,-1,0,1,0,-1,0,1,0],
+        [-1,0,1,0,1,0,-1,0,1,0], [1,0,-1,0,-1,0,1,0,-1,0],
+        [-1,1,0,-1,0,1,0,-1,1,0], [1,0,-1,0,1,0,-1,0,1,0],
+    ];
+    const safe = routes[world][phrase] * mirror, bonus = phrase === 9;
     if (bonus) return { lanes: [], safe: 0, kind: 'coin', action: 'run', bonus };
-    if (phrase === 3 || (world === 2 && phrase === 7))
-        return { lanes: [-1, 0, 1], safe: 0, kind: world === 2 ? 'fire' : 'crate', action: 'jump', bonus };
-    if (world > 0 && (phrase === 5 || (world === 2 && phrase === 1)))
-        return { lanes: [-1, 0, 1], safe: 0, kind: 'gate', action: 'slide', bonus };
-    const occupied = [-1, 0, 1].filter(l => l !== safe);
-    return { lanes: world === 0 && phrase < 2 ? [occupied[phrase]] : occupied,
-        safe, kind: phrase === 2 || phrase === 6 ? 'goomba' : world === 0 && phrase === 0 ? 'crate' : 'pipe', action: 'run', bonus };
+    const jumps = [[3],[3],[3,7],[3,7],[2,6],[1,5]][world];
+    const slides = [[],[5],[1,5],[1,5],[4,8],[3,7]][world];
+    if (jumps.includes(phrase)) return { lanes: [-1,0,1], safe: 0,
+        kind: world === 2 || world === 5 ? 'fire' : world === 3 ? 'ice' : 'crate', action: 'jump', bonus };
+    if (slides.includes(phrase)) return { lanes: [-1,0,1], safe: 0, kind: 'gate', action: 'slide', bonus };
+    const occupied = [-1,0,1].filter(l => l !== safe);
+    const kind = world === 3 ? 'ice' : world === 4 ? 'cactus' : phrase === 2 || phrase === 6 ? 'goomba' : world === 0 && phrase === 0 ? 'crate' : 'pipe';
+    return { lanes: world === 0 && phrase < 2 ? [occupied[phrase]] : occupied, safe, kind, action: 'run', bonus };
+
 }
 export function comboMultiplier(chain: number): number { return Math.min(3, 1 + Math.floor(chain / 10)); }
+
+// Rigid-part animation: preserve every mesh's scale; bend at hip/shoulder pivots.
+export function slideBlend(current: number, sliding: boolean, dt: number): number {
+    const target = sliding ? 1 : 0;
+    const next = current + (target - current) * (1 - Math.exp(-dt * (sliding ? 30 : 20)));
+    return Math.abs(next - target) < .001 ? target : next;
+}
+export function slidePose(blend: number) {
+    return { body: -82 * blend, head: 8 * blend, leftLeg: -86 * blend,
+        rightLeg: -78 * blend, arm: 22 * blend, spread: 14 * blend,
+        bodyDrop: .50 * blend, legDrop: .48 * blend };
+}

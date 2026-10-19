@@ -1,5 +1,5 @@
 import { _decorator, Component, Node, Camera, Color, Vec3, Material, Mesh, MeshRenderer, primitives, utils, DirectionalLight, resources, Prefab, instantiate, input, Input, EventKeyboard, KeyCode, EventTouch, director, sys, screen as gameScreen, Size } from 'cc';
-import { LANE, jumpStep, hazardHit, pattern, CHARACTERS, WORLDS, WORLD_LENGTH, FINISH_DISTANCE, ROW_GAP, worldAt, runSpeed, comboMultiplier } from './RunnerRules';
+import { LANE, jumpStep, hazardHit, pattern, CHARACTERS, WORLDS, WORLD_LENGTH, FINISH_DISTANCE, ROW_GAP, worldAt, runSpeed, comboMultiplier, SLIDE_DURATION, slideBlend, slidePose } from './RunnerRules';
 import { BrowserKeyboard, GameAction } from './BrowserKeyboard';
 const { ccclass, property } = _decorator;
 type Item = { node: Node; kind: string; lane: number; z: number; y: number; hit: boolean; action?: string };
@@ -8,9 +8,9 @@ type Item = { node: Node; kind: string; lane: number; z: number; y: number; hit:
 export class MarioRunner extends Component {
     @property(Material) worldMaterial: Material|null=null;
     private cameraNode!: Node; private gameCamera!: Camera; private avatar!: Node; private model!: Node;
-    private pivots: Record<string, Node> = {}; private materials: Record<string, Material> = {};
+    private pivots: Record<string, Node> = {}; private rest: Record<string, Vec3> = {}; private materials: Record<string, Material> = {};
     private meshes: Record<string, Mesh> = {}; private items: Item[] = []; private tiles: Node[] = [];
-    private scenery: Node[] = []; private hills:Node[]=[]; private sparks: {n:Node;t:number;v:Vec3}[]=[];
+    private scenery: Node[] = []; private hills:Node[]=[]; private sparks: {n:Node;t:number;v:Vec3;size?:number}[]=[];
     private state: 'loading'|'ready'|'running'|'paused'|'over'|'won' = 'loading';
     private lane=0; private x=0; private y=0; private vy=0; private time=0; private distance=0;
     private coins=0; private hearts=3; private best=0; private immune=0; private star=0;
@@ -23,6 +23,7 @@ export class MarioRunner extends Component {
     private garden:Node[]=[]; private factory:Node[]=[]; private castle:Node[]=[]; private floor!:Node;
     private slide=0; private shield=0; private chain=0; private chainTime=0; private coinScore=0;
     private dodges=0; private hits=0; private missionPaid=false; private notice=''; private noticeTime=0;
+    private slideMix=0; private dustClock=0; private biomes:Node[][]=WORLDS.map(()=>[]);
     private jumpBuffer=0; private touchArmed=false;
     private get character(){return CHARACTERS[this.selected];}
     private get travelled(){return this.distance-this.startWorld*WORLD_LENGTH;}
@@ -53,10 +54,10 @@ export class MarioRunner extends Component {
     // with the fullscreen CSS container, including browser panel resizing.
     private onResize=()=>{gameScreen.windowSize=new Size(window.innerWidth*gameScreen.devicePixelRatio,window.innerHeight*gameScreen.devicePixelRatio);};
     private selectCharacter(index:number){
-        this.selected=index;if(this.model)this.model.destroy();this.pivots={};
+        this.selected=index;if(this.model)this.model.destroy();this.pivots={};this.rest={};this.slideMix=0;
         const prefab=this.prefabs[this.character.id];if(!prefab)return;
         this.model=instantiate(prefab);this.model.parent=this.avatar;this.model.setScale(.64,.64,.64);
-        const walk=(n:Node)=>{if(['Arm_L','Arm_R','Leg_L','Leg_R','Body','Head'].includes(n.name))this.pivots[n.name]=n;n.children.forEach(walk);};walk(this.model);
+        const walk=(n:Node)=>{if(['Arm_L','Arm_R','Leg_L','Leg_R','Body','Head'].includes(n.name)){this.pivots[n.name]=n;this.rest[n.name]=new Vec3(n.position.x,n.position.y,n.position.z);}n.children.forEach(walk);};walk(this.model);
         this.refreshUI();
     }
     private tell(text:string){this.notice=text;this.noticeTime=3.5;}
@@ -66,8 +67,10 @@ export class MarioRunner extends Component {
         const scene=director.getScene();if(scene)scene.globals.fog.fogColor=new Color().fromHEX(w.sky);
         for(const n of this.roads)n.getComponent(MeshRenderer)?.setMaterial(this.material(w.road),0);
         for(const n of this.verges)n.getComponent(MeshRenderer)?.setMaterial(this.material(w.grass),0);
-        this.floor.getComponent(MeshRenderer)?.setMaterial(this.material(index===2?'#c75d39':index===1?'#7eaaad':'#8ecba4'),0);
+        this.floor.getComponent(MeshRenderer)?.setMaterial(this.material(w.grass),0);
         this.garden.forEach(n=>n.active=index===0);this.factory.forEach(n=>n.active=index===1);this.castle.forEach(n=>n.active=index===2);
+        this.biomes.forEach((group,i)=>group.forEach(n=>n.active=index===i));
+        if(this.state==='running')this.sound('level');
         this.tell('WORLD 0'+(index+1)+' · '+w.name+' — '+w.hint);
     }
 
@@ -112,6 +115,16 @@ export class MarioRunner extends Component {
             this.shape('box',c,0,1.6,0,2.3,3.2,2.3,'#5b526b');
             for(const dx of [-.8,0,.8])this.shape('box',c,dx,3.4,0,.55,.5,2.3,'#75667d');
             this.shape('box',c,0,2,1.17,.48,.85,.04,'#ffc273');
+            const snow=this.group('Snow valley',n);this.biomes[3].push(snow);
+            this.shape('cylinder',snow,0,1,0,.35,2,.35,'#8eabae');
+            for(let tier=0;tier<3;tier++)this.shape('sphere',snow,0,1.5+tier*.7,0,2.5-tier*.6,1.2,2.5-tier*.6,'#e5f4f5');
+            const dune=this.group('Desert ruins',n);this.biomes[4].push(dune);
+            this.shape('box',dune,0,1.8,0,1,3.6,1,'#c29158');this.shape('box',dune,0,3.5,0,1.6,.4,1.5,'#ecd3a0');
+            this.shape('sphere',dune,1,.15,1,2.8,.65,2.3,'#e6ba7c');
+            const star=this.group('Star beacons',n);this.biomes[5].push(star);
+            this.shape('cylinder',star,0,1.1,0,.25,2.2,.25,'#77719c');
+            const gem=this.shape('box',star,0,2.5,0,.85,.85,.55,'#ffe4a0');gem.setRotationFromEuler(0,25,45);
+            this.shape('sphere',star,0,.1,0,1.8,.3,1.8,'#c2bce5');
         }
         for(let i=0;i<12;i++){
             const n=this.group('Distant hills');this.hills.push(n);n.setPosition((i%2?1:-1)*(18+i*1.4),1,-20-i*7);
@@ -130,7 +143,12 @@ export class MarioRunner extends Component {
     }
     private obstacle(kind:string,lane:number,z:number){
         const n=this.group(kind);n.setPosition(lane*LANE,0,z);
-        if(kind==='pipe'){
+        if(kind==='ice'){
+            for(const x of [-.35,.28]){const crystal=this.shape('box',n,x,.48,0,.62,.96,.8,'#80cee9');crystal.setRotationFromEuler(0,18,x*20);this.shape('box',n,x,.56,.42,.12,.55,.025,'#e9fbff');}
+        } else if(kind==='cactus'){
+            this.shape('cylinder',n,0,.8,0,.7,1.6,.7,'#43866a');
+            for(const side of [-1,1]){this.shape('box',n,side*.4,.8,0,.5,.22,.38,'#5a9e76');this.shape('cylinder',n,side*.61,1.08,0,.28,.65,.28,'#5a9e76');}
+        } else if(kind==='pipe'){
             this.shape('cylinder',n,0,.78,0,1.15,1.56,1.15,this.colors.pipe);
             this.shape('cylinder',n,0,1.49,0,1.4,.28,1.4,'#44c481');
             this.shape('cylinder',n,0,1.638,0,1.07,.012,1.07,'#155648');
@@ -188,7 +206,7 @@ export class MarioRunner extends Component {
         for(const e of this.items)e.node.destroy();this.items=[];
         for(const p of this.sparks)p.n.destroy();this.sparks=[];
         this.distance=this.startWorld*WORLD_LENGTH;this.coins=0;this.hearts=this.character.hearts;this.lane=0;this.x=0;this.y=0;this.vy=0;this.immune=0;this.star=0;this.time=0;this.rowIndex=this.startWorld*20;this.speed=runSpeed(this.distance,this.endless);
-        this.slide=0;this.shield=0;this.chain=0;this.chainTime=0;this.coinScore=0;this.dodges=0;this.hits=0;this.missionPaid=false;this.jumpBuffer=0;
+        this.slide=0;this.slideMix=0;this.dustClock=0;this.shield=0;this.chain=0;this.chainTime=0;this.coinScore=0;this.dodges=0;this.hits=0;this.missionPaid=false;this.jumpBuffer=0;
         this.applyWorld(this.startWorld);this.loadBest();
         this.nextRow=-24;while(this.nextRow>-104){this.spawnRow(this.rowIndex++,this.nextRow);this.nextRow-=ROW_GAP;}
         this.tiles.forEach((n,i)=>n.setPosition(0,0,12-i*9));
@@ -205,7 +223,7 @@ export class MarioRunner extends Component {
         if(this.state==='running'){this.slide=0;this.jumpBuffer=.14;if(this.y===0)this.launchJump();}
     }
     private launchJump(){this.vy=this.character.jump;this.y=.001;this.jumpBuffer=0;this.sound('jump');}
-    private duck(){if(this.state==='running'&&this.y<.05&&this.slide===0){this.slide=.85;this.jumpBuffer=0;}}
+    private duck(){if(this.state==='running'&&this.y<.05&&this.slide===0){this.slide=SLIDE_DURATION;this.jumpBuffer=0;this.sound('slide');}}
     private menu=()=>{for(const i of this.items)i.node.destroy();this.items=[];this.state='ready';this.slide=0;this.star=0;this.shield=0;this.noticeTime=0;this.model.active=true;this.applyWorld(this.startWorld);this.refreshUI();};
     private shift(dir:number){if(this.state==='running')this.lane=Math.max(-1,Math.min(1,this.lane+dir));}
     private pause=()=>{if(this.state==='running')this.state='paused';else if(this.state==='paused')this.state='running';this.refreshUI();};
@@ -233,6 +251,21 @@ export class MarioRunner extends Component {
     private onTouchCancel(){this.touchArmed=false;}
     private onTouchStart(e:EventTouch){this.touchArmed=true;const p=e.getLocation();this.touch={x:p.x,y:p.y};}
     private onTouchEnd(e:EventTouch){if(!this.touchArmed)return;this.touchArmed=false;const p=e.getLocation();const dx=p.x-this.touch.x,dy=p.y-this.touch.y;if(Math.abs(dx)>35&&Math.abs(dx)>Math.abs(dy))this.shift(Math.sign(dx));else if(dy < -25)this.duck();else if(dy>25||Math.abs(dx)<20)this.jump();}
+    private animateCharacter(dt:number,running:boolean,idle:boolean){
+        if(this.state==='paused')return;
+            this.slideMix=idle?0:slideBlend(this.slideMix,this.slide>0,dt);
+            const pose=slidePose(this.slideMix);
+            for(const name of ['Body','Head','Arm_L','Arm_R','Leg_L','Leg_R']){
+                const p=this.pivots[name],base=this.rest[name];if(!p||!base)continue;
+                const swing=(running?Math.sin(this.time*13+(name==='Arm_R'||name==='Leg_L'?0:Math.PI))*32:Math.sin(this.time*2)*3)*(1-this.slideMix);
+                let rx=0,rz=0,drop=0;
+                if(name==='Body'){rx=pose.body;drop=base.y*pose.bodyDrop;}
+                else if(name==='Head')rx=pose.head;
+                else if(name.startsWith('Leg')){rx=swing+(name==='Leg_L'?pose.leftLeg:pose.rightLeg);drop=base.y*pose.legDrop*(base.y<.8?.8:1);rz=(name==='Leg_L'?-5:8)*this.slideMix;}
+                else{rx=swing+pose.arm;rz=(name==='Arm_L'?1:-1)*pose.spread;}
+                p.setPosition(base.x,base.y-drop,base.z);p.setRotationFromEuler(rx,0,rz);
+            }
+    }
     update(delta:number){
         const dt=Math.min(delta,.05);
         if(this.state!=='paused')this.time+=dt;
@@ -240,10 +273,8 @@ export class MarioRunner extends Component {
             const running=this.state==='running',idle=this.state==='ready'||this.state==='loading';
             this.scenery.forEach(n=>n.active=!idle);this.hills.forEach(n=>n.active=!idle);
             const compact=typeof window!=='undefined'&&window.innerWidth<500;const size=idle?(compact?1.1:1.45):1;
-            this.avatar.setRotationFromEuler(0,idle?18:180,0);this.avatar.setScale(size,this.slide>0?.43:size,size);if(idle)this.avatar.setPosition(compact?.45:.9,0,0);
-            if(this.state!=='paused')for(const name of ['Arm_L','Arm_R','Leg_L','Leg_R']){
-                const p=this.pivots[name];if(p)p.setRotationFromEuler(running?Math.sin(this.time*13+(name==='Arm_R'||name==='Leg_L'?0:Math.PI))*32:Math.sin(this.time*2)*3,0,0);
-            }
+            this.avatar.setRotationFromEuler(0,idle?18:180+32*this.slideMix,0);this.avatar.setScale(size,size,size);if(idle)this.avatar.setPosition(compact?.45:.9,0,0);
+            this.animateCharacter(dt,running,idle);
             this.gameCamera.fov=compact&&!idle?52:48;
             const target=idle?new Vec3(6.5,4,8):new Vec3(this.x*.13,compact?8.2:6.8,compact?16:10.8);
             const pos=new Vec3();Vec3.lerp(pos,this.cameraNode.position,target,Math.min(1,dt*3));this.cameraNode.setPosition(pos);
@@ -257,7 +288,8 @@ export class MarioRunner extends Component {
             this.slide=Math.max(0,this.slide-dt);this.jumpBuffer=Math.max(0,this.jumpBuffer-dt);if(this.y===0&&this.jumpBuffer>0)this.launchJump();
             this.chainTime=Math.max(0,this.chainTime-dt);if(this.chainTime===0)this.chain=0;this.noticeTime=Math.max(0,this.noticeTime-dt);
             this.immune=Math.max(0,this.immune-dt);this.star=Math.max(0,this.star-dt);
-            this.avatar.setPosition(this.x,this.y+(this.y===0?Math.abs(Math.sin(this.time*13))*.055:0),0);
+            this.avatar.setPosition(this.x,this.y+(this.y===0?Math.abs(Math.sin(this.time*13))*.055*(1-this.slideMix):0),0);
+            if(this.slide>0){this.dustClock-=dt;if(this.dustClock<=0){this.dustClock=.055;this.skidDust();}}
             if(this.model)this.model.active=this.immune===0||Math.floor(this.immune*12)%2===0;
             this.shadow.setPosition(this.x,.03,0);this.shadow.setScale(1.25-this.y*.15,.025,.9-this.y*.1);
             for(const n of this.tiles){let z=n.position.z+move;if(z>21)z-=126;n.setPosition(0,0,z);}
@@ -282,26 +314,42 @@ export class MarioRunner extends Component {
                 }
             }
             for(const item of this.items)if(!item.hit&&!['coin','star','shield','heart'].includes(item.kind)&&item.z>.85){
-                item.hit=true;if(Math.abs(this.x-item.lane*LANE)<.78){this.dodges++;this.coinScore+=25;}
+                item.hit=true;if(Math.abs(this.x-item.lane*LANE)<.78){this.dodges++;this.coinScore+=25;this.sound('dodge');}
             }
             if(!this.missionPaid&&this.coins>=60&&this.dodges>=8){this.missionPaid=true;this.coinScore+=500;this.hearts=Math.min(this.character.hearts,this.hearts+1);this.tell('任务完成！+500 分 · 回复 1 格生命');this.sound('star');}
             this.items=this.items.filter(e=>{if(e.z>15){e.node.destroy();return false;}return true;});
             this.refreshHUD();
         }
-        if(this.state!=='paused')this.sparks=this.sparks.filter(p=>{p.t-=dt;if(p.t<=0){p.n.destroy();return false;}p.v.y-=dt*9;p.n.setPosition(p.n.position.x+p.v.x*dt,p.n.position.y+p.v.y*dt,p.n.position.z+p.v.z*dt);p.n.setScale(p.t*.2,p.t*.2,p.t*.2);return true;});
+        if(this.state!=='paused')this.sparks=this.sparks.filter(p=>{p.t-=dt;if(p.t<=0){p.n.destroy();return false;}p.v.y-=dt*9;p.n.setPosition(p.n.position.x+p.v.x*dt,p.n.position.y+p.v.y*dt,p.n.position.z+p.v.z*dt);p.n.setScale(p.t*(p.size||.2),p.t*(p.size||.2),p.t*(p.size||.2));return true;});
     }
+    private skidDust(){for(const side of [-1,1]){const n=this.shape('sphere',this.node,this.x+side*.35,.13,.5,.15,.15,.15,WORLDS[this.currentWorld].grass);this.sparks.push({n,t:.35,size:.65,v:new Vec3(side*.7,.7,5)});}}
     private burst(x:number,y:number,z:number,c:string,count:number){for(let i=0;i<count;i++){const n=this.shape('box',this.node,x,y,z,.14,.14,.14,c);this.sparks.push({n,t:.6,v:new Vec3(Math.sin(i*2.4)*3,2+Math.random()*3,Math.cos(i*2.4)*2)});}}
     private collectCoin(){
         this.coins++;this.chain++;this.chainTime=3;this.coinScore+=10*comboMultiplier(this.chain);this.sound('coin');
         if(this.character.id==='Mario'&&this.coins%30===0){this.hearts=Math.min(this.character.hearts,this.hearts+1);this.tell('马力欧的补给 · 恢复 1 格生命');}
     }
-    private recordKey(){return 'mario-skyway-v11-'+(this.endless?'endless':'campaign')+'-'+this.startWorld;}
+    private recordKey(){return 'mario-skyway-v12-'+(this.endless?'endless':'campaign')+'-'+this.startWorld;}
     private loadBest(){try{this.best=Number(sys.localStorage.getItem(this.recordKey())||0);}catch{this.best=0;}}
     private finish(won=false){this.state=won?'won':'over';if(this.model)this.model.active=true;this.slide=0;
-        if(won)this.coinScore+=this.hearts*200;this.best=Math.max(this.best,this.score);
+        if(won){this.coinScore+=this.hearts*200;this.sound('win');}this.best=Math.max(this.best,this.score);
         try{sys.localStorage.setItem(this.recordKey(),String(this.best));}catch{}this.refreshUI();}
     private initAudio(){try{if(!this.audio)this.audio=new(window.AudioContext||(window as any).webkitAudioContext)();void this.audio.resume();}catch{}}
-    private sound(kind:string){if(!this.audio||this.muted)return;const notes:Record<string,number[]>={coin:[880,1320],jump:[330,660],hit:[180,95],star:[523,659,784,1047],start:[392,523,659]};for(const [i,hz]of(notes[kind]||[]).entries()){const o=this.audio.createOscillator(),g=this.audio.createGain();o.type='triangle';o.frequency.value=hz;o.connect(g);g.connect(this.audio.destination);const t=this.audio.currentTime+i*.07;g.gain.setValueAtTime(.055,t);g.gain.exponentialRampToValueAtTime(.001,t+.15);o.start(t);o.stop(t+.16);}}
+    private sound(kind:string){
+        if(!this.audio||this.muted)return;const audio=this.audio;
+        if(kind==='slide'){
+            const length=Math.floor(audio.sampleRate*.42),buffer=audio.createBuffer(1,length,audio.sampleRate),data=buffer.getChannelData(0);
+            for(let i=0;i<length;i++)data[i]=(Math.random()*2-1);
+            const source=audio.createBufferSource(),filter=audio.createBiquadFilter(),gain=audio.createGain();source.buffer=buffer;filter.type='bandpass';filter.Q.value=.65;
+            const t=audio.currentTime;filter.frequency.setValueAtTime(1700,t);filter.frequency.exponentialRampToValueAtTime(260,t+.4);
+            gain.gain.setValueAtTime(.001,t);gain.gain.linearRampToValueAtTime(.13,t+.035);gain.gain.exponentialRampToValueAtTime(.001,t+.42);
+            source.connect(filter);filter.connect(gain);gain.connect(audio.destination);source.start(t);source.stop(t+.43);source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();};return;
+        }
+        const notes:Record<string,number[]>={coin:[880,1320],jump:[330,660],hit:[180,95],star:[523,659,784,1047],start:[392,523,659],dodge:[784,1047],level:[523,784,1047,1319],win:[523,659,784,1047,784,1047,1568]};
+        for(const [i,hz]of(notes[kind]||[]).entries()){
+            const o=audio.createOscillator(),g=audio.createGain();o.type='triangle';o.frequency.value=hz;o.connect(g);g.connect(audio.destination);
+            const t=audio.currentTime+i*.07;g.gain.setValueAtTime(kind==='dodge'?.025:.055,t);g.gain.exponentialRampToValueAtTime(.001,t+.15);o.start(t);o.stop(t+.16);o.onended=()=>{o.disconnect();g.disconnect();};
+        }
+    }
     private createUI(){
         if(typeof document==='undefined')return;
         const style=document.createElement('style');style.id='mario-style';style.textContent=`
@@ -309,24 +357,24 @@ export class MarioRunner extends Component {
         #mario-ui{position:fixed;inset:0;z-index:50;pointer-events:none;font-family:Inter,'Avenir Next','PingFang SC',system-ui,sans-serif;color:#194b4d;text-align:left}
         #mario-ui button{pointer-events:auto;cursor:pointer;font:inherit;border:0;transition:transform .15s,background .15s}#mario-ui button:hover{transform:translateY(-2px)}#mario-ui button:focus-visible{outline:3px solid #ffca51;outline-offset:3px}#mario-ui button:disabled{opacity:.5;cursor:wait}
         .topbar{position:absolute;top:24px;left:32px;right:32px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;gap:10px;align-items:center;font-size:15px;font-weight:850;letter-spacing:.06em}.badge{background:#e94e43;color:#fff9e8;display:grid;place-items:center;width:38px;height:38px;border-radius:13px;font-size:24px;box-shadow:0 4px 0 #bb3932}.brand small{display:block;font-size:9px;letter-spacing:.12em;margin-top:5px}.stats{display:flex;gap:8px}.stat{background:#fff8e9e8;backdrop-filter:blur(10px);border:1px solid #fff9;padding:9px 16px;border-radius:16px;min-width:100px}.stat small{font-size:9px;letter-spacing:.10em;display:block;opacity:.65;font-weight:700}.stat b{display:block;font-size:23px;line-height:1.15;margin-top:3px;font-variant-numeric:tabular-nums}.stat b em{font-size:12px;font-style:normal;margin-left:4px}.actions{display:flex;gap:8px}.iconbtn{width:40px;height:40px;background:#fff8e9ed;border-radius:50%;color:#194b4d;font-size:18px!important}
-        .hero{position:absolute;left:5%;top:15%;width:395px;max-width:51vw}.eyebrow{font-size:10px;letter-spacing:.15em;font-weight:850;margin-bottom:12px}.hero h1{font-size:clamp(35px,4.2vw,54px);line-height:1.08;letter-spacing:-.055em;margin:0 0 16px;font-weight:900}.hero h1 span{display:block;color:#e95043}.hero p{font-size:13px;line-height:1.8;margin:0 0 20px;max-width:340px;color:#355f5c}.primary{background:#e95043;color:#fff8e8;border-radius:15px;padding:15px 25px;font-weight:800!important;font-size:15px!important;box-shadow:0 4px 0 #bd3e34}.primary span{margin-left:24px}.subnote{text-shadow:0 1px 5px #fff8e9;font-size:10px;margin-top:14px;color:#416961}.select-label{font-size:10px;font-weight:800;letter-spacing:.08em;margin:13px 0 7px}.world-select,.mode-select{display:flex;gap:6px}.world-select button,.mode-select button{border-radius:11px;padding:10px 11px;color:#345a59;background:#fff9e8d9;font-size:11px!important;font-weight:750!important}.world-select button[aria-pressed=true],.mode-select button[aria-pressed=true]{background:#194b4d;color:#fff7e5}.world-select small{display:block;font-size:8px;opacity:.7;margin-bottom:3px}.mode-select{margin:10px 0 17px}.mode-select button{padding:8px 13px;font-size:10px!important}.world-description{text-shadow:0 1px 5px #fff8e9;font-size:10px;line-height:1.6;margin-top:8px;color:#315c58}
+        .hero{position:absolute;left:5%;top:15%;width:395px;max-width:51vw}.eyebrow{font-size:10px;letter-spacing:.15em;font-weight:850;margin-bottom:12px}.hero h1{font-size:clamp(35px,4.2vw,54px);line-height:1.08;letter-spacing:-.055em;margin:0 0 16px;font-weight:900}.hero h1 span{display:block;color:#e95043}.hero p{font-size:13px;line-height:1.8;margin:0 0 20px;max-width:340px;color:#355f5c}.primary{background:#e95043;color:#fff8e8;border-radius:15px;padding:15px 25px;font-weight:800!important;font-size:15px!important;box-shadow:0 4px 0 #bd3e34}.primary span{margin-left:24px}.subnote{text-shadow:0 1px 5px #fff8e9;font-size:10px;margin-top:14px;color:#416961}.select-label{font-size:10px;font-weight:800;letter-spacing:.08em;margin:13px 0 7px}.world-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.mode-select{display:flex;gap:6px}.world-select button,.mode-select button{border-radius:11px;padding:10px 11px;color:#345a59;background:#fff9e8d9;font-size:11px!important;font-weight:750!important}.world-select button[aria-pressed=true],.mode-select button[aria-pressed=true]{background:#194b4d;color:#fff7e5}.world-select small{display:block;font-size:8px;opacity:.7;margin-bottom:3px}.mode-select{margin:10px 0 17px}.mode-select button{padding:8px 13px;font-size:10px!important}.world-description{text-shadow:0 1px 5px #fff8e9;font-size:10px;line-height:1.6;margin-top:8px;color:#315c58}
         .roster{position:absolute;left:5%;right:5%;bottom:87px}.roster-title{color:#143f40;text-shadow:0 1px 5px #fff8e9;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:11px;font-weight:800;letter-spacing:.04em}.roster-title small{font-weight:500;opacity:.7}.character-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.character{background:#fff8e9e8;border:2px solid transparent!important;border-radius:17px;padding:14px 12px;color:#315a56;display:flex;align-items:center;gap:10px;text-align:left;min-width:0}.character[aria-pressed=true]{border-color:var(--accent)!important;background:#fff9e9;box-shadow:0 6px 22px #174b5014}.avatar-icon{flex-shrink:0;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:var(--accent);color:white;font-size:20px;font-weight:900}.character strong{font-size:13px;display:block}.character small{display:block;font-size:9px;margin-top:4px;opacity:.7}.skill-note{margin-top:10px;font-size:11px;padding:9px 14px;border-radius:12px;display:inline-block;background:#fff7e6e0}.preview-label{padding:12px 16px;border-radius:15px;background:#fff8e9cc;position:absolute;right:8%;top:26%;text-align:right}.preview-label b{display:block;font-size:22px;margin:5px 0}.preview-label small{font-size:10px;letter-spacing:.15em}
         .stagebar{position:absolute;top:105px;left:32px;right:32px;border-radius:14px;background:#fff8e9e8;padding:11px 15px;display:flex;gap:16px;align-items:center;font-size:11px}.stagebar b{white-space:nowrap}.track{flex:1;height:5px;border-radius:5px;background:#194b4d22;overflow:hidden}.track i{display:block;height:100%;background:#e95043;width:0;transition:width .2s}.stagebar small{font-size:10px;white-space:nowrap}.notice{position:absolute;top:155px;left:50%;transform:translateX(-50%);padding:9px 17px;border-radius:13px;background:#fff7e6ee;font-size:11px;max-width:90%;text-align:center;line-height:1.6;width:max-content}.cue{position:absolute;top:210px;left:50%;transform:translateX(-50%);background:#194b4ded;color:#fff7df;font-weight:800;font-size:15px;border-radius:15px;padding:10px 20px}.mission{position:absolute;left:32px;bottom:95px;background:#fff8e9e8;border-radius:15px;padding:11px 15px;font-size:10px;line-height:1.9}.mission b{font-size:12px}.power{position:absolute;right:32px;bottom:95px;background:#fff0bded;border-radius:15px;padding:10px 16px;font-size:11px;font-weight:800;line-height:1.9;text-align:right}
         .footer{position:absolute;bottom:22px;left:32px;right:32px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#365f5d}.keys{display:flex;gap:14px;background:#fff7e6e0;padding:12px 17px;border-radius:13px;backdrop-filter:blur(10px)}kbd{font:inherit;font-weight:800;background:#fffaf0;padding:3px 5px;border-radius:4px;box-shadow:0 2px 0 #d5d7c7;margin-right:4px}.note{font-size:9px;letter-spacing:.06em}.centerback{position:absolute;inset:0;display:grid;place-items:center;background:#174b5044;backdrop-filter:blur(7px);pointer-events:auto}.card{width:430px;max-width:90vw;max-height:90vh;overflow:auto;background:#fff7e5;border-radius:26px;padding:32px;text-align:center;box-shadow:0 25px 80px #174b5033}.card h2{font-size:31px;letter-spacing:-.04em;margin:10px 0 15px}.card p{font-size:12px;color:#5c7771;line-height:1.8}.result{font-size:62px;font-weight:900;color:#e95043;letter-spacing:-.06em}.result small{font-size:13px;letter-spacing:0;color:#55756c}.resultrow{display:flex;justify-content:center;gap:20px;margin:15px 0 22px;font-size:12px}.secondary{background:#e2e7d7;color:#315c54;padding:12px 20px;border-radius:12px;margin-top:14px;font-size:12px!important}.result-stars{font-size:28px;color:#cc9633;letter-spacing:6px;margin:12px}.mobile-controls{display:none;position:absolute;bottom:73px;left:18px;right:18px;justify-content:space-between;pointer-events:none}.mobile-controls button{width:53px;height:53px;border-radius:18px;background:#fff7e5ed;color:#194b4d;font-size:22px!important}.mobile-controls div{display:flex;gap:8px}.mobile-controls button small{font-size:9px;display:block}.hidden{display:none!important}
-        @media(max-width:900px){.topbar{left:20px;right:20px;top:20px;flex-wrap:wrap}.brand{font-size:12px}.brand small{font-size:8px}.stats{order:3;width:100%;justify-content:center;margin-top:5px}.stat{min-width:98px;padding:7px 14px}.stat b{font-size:21px}.hero{top:22%;width:340px}.hero h1{font-size:40px}.hero p{font-size:12px;max-width:260px}.stagebar{top:145px;left:20px;right:20px}.notice{top:193px}.cue{top:245px}.character{padding:12px 9px;gap:7px}.character strong{font-size:12px}.avatar-icon{width:28px;height:28px;font-size:18px}.preview-label{top:23%;right:6%}.mobile-controls{display:flex}.mission{bottom:137px;left:20px}.power{bottom:137px;right:20px}.footer{left:20px;right:20px;bottom:20px}.keys{gap:12px;font-size:9px;padding:10px 12px}.note{display:none}}
+        @media(max-width:900px){.topbar{left:20px;right:20px;top:20px;flex-wrap:wrap}.brand{font-size:12px}.brand small{font-size:8px}.stats{order:3;width:100%;justify-content:center;margin-top:5px}.stat{min-width:98px;padding:7px 14px}.stat b{font-size:21px}.hero{top:20%;width:340px}.hero p{margin-bottom:8px}.hero h1{margin-bottom:10px}.hero h1{font-size:40px}.hero p{font-size:12px;max-width:260px}.stagebar{top:145px;left:20px;right:20px}.notice{top:193px}.cue{top:245px}.character{padding:12px 9px;gap:7px}.character strong{font-size:12px}.avatar-icon{width:28px;height:28px;font-size:18px}.preview-label{top:23%;right:6%}.mobile-controls{display:flex}.mission{bottom:137px;left:20px}.power{bottom:137px;right:20px}.footer{left:20px;right:20px;bottom:20px}.keys{gap:12px;font-size:9px;padding:10px 12px}.note{display:none}}
         @media(max-width:520px){.hero{left:20px;top:155px;max-width:calc(100vw - 40px);width:calc(100vw - 40px)}.hero h1{font-size:31px;margin-bottom:9px}.hero h1 span{display:inline;margin-left:8px}.hero p{display:none}.eyebrow{font-size:8px;margin-bottom:9px}.world-select button{padding:8px 10px;flex:1}.world-description{max-width:220px;font-size:9px}.mode-select{margin:8px 0 12px}.hero .primary{padding:12px 19px;font-size:13px!important}.subnote{text-shadow:0 1px 5px #fff8e9;font-size:9px;margin-top:10px}.roster{left:20px;right:20px;bottom:73px}.character-grid{grid-template-columns:repeat(2,1fr);gap:7px}.character{padding:10px}.roster-title{font-size:10px;margin-bottom:7px}.roster-title small{display:none}.skill-note{font-size:9px;display:block;padding:8px 10px;margin-top:7px}.preview-label{display:none}.stagebar{gap:8px;font-size:10px;padding:10px}.stagebar small{font-size:9px}.mission{font-size:9px;padding:9px 11px}.power{font-size:10px;max-width:145px;padding:9px 11px}.footer{left:14px;right:14px}.keys{gap:8px;font-size:8px;width:100%;justify-content:center;padding:10px 6px}.notice{font-size:10px}.cue{font-size:13px}.stat{min-width:94px}.stat b{font-size:19px}}
-        @media(max-height:700px) and (min-width:521px){.hero{top:125px}.hero h1{font-size:34px}.hero p{display:none}.roster{bottom:65px}.character{padding:8px}.skill-note{padding:5px 10px}.preview-label{top:29%}}
-        @media(max-height:760px) and (max-width:520px){.hero{top:145px}.hero h1{font-size:26px}.world-description{display:none}.roster{bottom:61px}.character{padding:7px}.roster-title{margin-bottom:5px}.skill-note{padding:5px 8px}.select-label{margin-top:8px}.subnote{display:none}.footer{bottom:14px}}
+        @media(max-height:800px) and (min-width:521px){.hero{top:125px}.hero h1{font-size:34px}.hero p{display:none}.roster{bottom:65px}.character{padding:8px}.skill-note{padding:5px 10px}.preview-label{top:29%}}
+        @media(max-height:760px) and (max-width:520px){.hero{top:145px}.hero h1{font-size:24px;margin-bottom:6px}.eyebrow{display:none}.world-select button{padding:6px 7px}.mode-select{margin:6px 0 9px}.hero .primary{padding:9px 16px}.world-description{display:none}.roster{bottom:61px}.character{padding:7px}.roster-title{margin-bottom:5px}.skill-note{padding:5px 8px}.select-label{margin-top:8px}.subnote{display:none}.footer{bottom:14px}}
         `;document.head.appendChild(style);this.ui=document.createElement('div');this.ui.id='mario-ui';document.body.appendChild(this.ui);this.refreshUI();
     }
     private refreshUI(focusCanvas=true){
-        if(!this.ui)return;this.ui.dataset.state=this.state;this.ui.dataset.version='1.1.0';
+        if(!this.ui)return;this.ui.dataset.state=this.state;this.ui.dataset.version='1.2.0';
         const ready=this.state==='ready'||this.state==='loading',over=this.state==='over'||this.state==='won',won=this.state==='won';
         const c=this.character,world=WORLDS[this.startWorld],stars=1+(this.coins>=60?1:0)+(this.hits===0?1:0);
-        this.ui.innerHTML=`<header class="topbar"><div class="brand"><div class="badge">M</div><div>MARIO SKYWAY<small>蘑菇王国 · 冒险升级 1.1</small></div></div><div class="stats"><div class="stat"><small>DISTANCE / 距离</small><b id="distance">0<em>m</em></b></div><div class="stat"><small>COINS / 金币</small><b id="coins" style="color:#bf811e">0</b></div><div class="stat"><small>LIFE / 生命</small><b id="hearts" style="color:#e95043;font-size:19px">♥ ♥ ♥</b></div></div><div class="actions"><button class="iconbtn" id="sound" aria-label="切换声音">${this.muted?'♫̸':'♫'}</button><button class="iconbtn ${ready||over?'hidden':''}" id="pause" aria-label="暂停或继续">${this.state==='paused'?'▶':'Ⅱ'}</button></div></header>
-        ${ready?`<section class="hero"><div class="eyebrow">FOUR HEROES. THREE WORLDS. YOUR ADVENTURE.</div><h1>换个伙伴。<span>再闯一关。</span></h1><p>从阳光花园跑进熔岩城堡。<br>跳跃、下滑、连击，在变化的跑道上创造纪录。</p><div class="select-label">选择起点 / 后段关卡更具挑战</div><div class="world-select">${WORLDS.map((w,i)=>`<button id="world-${i}" aria-pressed="${i===this.startWorld}"><small>WORLD 0${i+1} · ${'★'.repeat(i+1)}</small>${w.name}</button>`).join('')}</div><div class="world-description">${world.hint}</div><div class="mode-select"><button id="campaign" aria-pressed="${!this.endless}">闯关 · ${FINISH_DISTANCE-this.startWorld*WORLD_LENGTH} 米</button><button id="endless" aria-pressed="${this.endless}">无尽 · 更快节奏</button></div><button class="primary" id="start" ${this.state==='loading'?'disabled':''}>${this.loadError|| (this.state==='loading'?'正在召集伙伴…':'开始冒险')}<span>↗</span></button><div class="subnote">本模式最佳 ${this.best.toLocaleString()} 分 · 空格也可出发</div></section><section class="roster"><div class="roster-title">选一位冒险伙伴 <small>每位角色都有不同的跑酷特长</small></div><div class="character-grid">${CHARACTERS.map((ch,i)=>`<button class="character" id="character-${i}" style="--accent:${ch.color}" aria-pressed="${i===this.selected}" ${this.state==='loading'?'disabled':''}><span class="avatar-icon">${ch.badge}</span><span><strong>${ch.name}</strong><small>${ch.tag}</small></span></button>`).join('')}</div><div class="skill-note"><b>${c.name}的特长</b> · ${c.skill}</div></section>`:`<div class="stagebar"><b id="stage-name"></b><div class="track"><i id="progress"></i></div><small id="stage-distance"></small></div><div id="notice" role="status" class="notice hidden"></div><div id="cue" class="cue hidden"></div><div class="mission"><b id="score"></b><br><span id="mission"></span></div><div id="power" class="power"></div>`}
+        this.ui.innerHTML=`<header class="topbar"><div class="brand"><div class="badge">M</div><div>MARIO SKYWAY<small>蘑菇王国 · 六境冒险 1.2</small></div></div><div class="stats"><div class="stat"><small>DISTANCE / 距离</small><b id="distance">0<em>m</em></b></div><div class="stat"><small>COINS / 金币</small><b id="coins" style="color:#bf811e">0</b></div><div class="stat"><small>LIFE / 生命</small><b id="hearts" style="color:#e95043;font-size:19px">♥ ♥ ♥</b></div></div><div class="actions"><button class="iconbtn" id="sound" aria-label="切换声音">${this.muted?'♫̸':'♫'}</button><button class="iconbtn ${ready||over?'hidden':''}" id="pause" aria-label="暂停或继续">${this.state==='paused'?'▶':'Ⅱ'}</button></div></header>
+        ${ready?`<section class="hero"><div class="eyebrow">FOUR HEROES. SIX WORLDS. YOUR ADVENTURE.</div><h1>换个伙伴。<span>再闯一关。</span></h1><p>从阳光花园跑向星光天路。<br>跳跃、下滑、连击，在变化的跑道上创造纪录。</p><div class="select-label">选择起点 / 后段关卡更具挑战</div><div class="world-select">${WORLDS.map((w,i)=>`<button id="world-${i}" aria-pressed="${i===this.startWorld}"><small>WORLD 0${i+1} · ${'★'.repeat(Math.min(3,Math.ceil((i+1)/2)))}</small>${w.name}</button>`).join('')}</div><div class="world-description">${world.hint}</div><div class="mode-select"><button id="campaign" aria-pressed="${!this.endless}">闯关 · ${FINISH_DISTANCE-this.startWorld*WORLD_LENGTH} 米</button><button id="endless" aria-pressed="${this.endless}">无尽 · 更快节奏</button></div><button class="primary" id="start" ${this.state==='loading'?'disabled':''}>${this.loadError|| (this.state==='loading'?'正在召集伙伴…':'开始冒险')}<span>↗</span></button><div class="subnote">本模式最佳 ${this.best.toLocaleString()} 分 · 空格也可出发</div></section><section class="roster"><div class="roster-title">选一位冒险伙伴 <small>每位角色都有不同的跑酷特长</small></div><div class="character-grid">${CHARACTERS.map((ch,i)=>`<button class="character" id="character-${i}" style="--accent:${ch.color}" aria-pressed="${i===this.selected}" ${this.state==='loading'?'disabled':''}><span class="avatar-icon">${ch.badge}</span><span><strong>${ch.name}</strong><small>${ch.tag}</small></span></button>`).join('')}</div><div class="skill-note"><b>${c.name}的特长</b> · ${c.skill}</div></section>`:`<div class="stagebar"><b id="stage-name"></b><div class="track"><i id="progress"></i></div><small id="stage-distance"></small></div><div id="notice" role="status" class="notice hidden"></div><div id="cue" class="cue hidden"></div><div class="mission"><b id="score"></b><br><span id="mission"></span></div><div id="power" class="power"></div>`}
         ${this.state==='paused'?`<div class="centerback"><section class="card"><div class="eyebrow">TAKE A BREATH</div><h2>准备好，再出发。</h2><p>${c.name} · ${WORLDS[Math.max(0,this.currentWorld)].name}<br>蓝色横梁按 ↓ 下滑；整排火焰按空格跳跃。</p><button class="primary" id="resume">继续冒险 <span>↗</span></button><br><button class="secondary" id="menu">返回选角 / 关卡</button></section></div>`:''}
-        ${over?`<div class="centerback"><section class="card"><div class="eyebrow">${won?'COURSE CLEAR / 闯关成功':'KEEP RUNNING / 本次成绩'}</div><h2>${won?'城堡抵达，冒险达成！':'下一次，再远一点。'}</h2>${won?`<div class="result-stars" aria-label="${stars} 星通关">${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</div>`:''}<div class="result">${this.score}<small> 分</small></div><div class="resultrow"><span>${Math.floor(this.travelled)} 米</span><span>${this.coins} 金币</span><span>最佳 ${this.best}</span></div><p>${c.name} · 技巧避障 ${this.dodges} 次 · 受伤 ${this.hits} 次<br>${won?'每格剩余生命奖励 200 分 · 收集 60 金币 / 无伤各加一星':'连拾金币最高 3 倍分 · 跳跃和下滑避障各得 25 分'}</p><button class="primary" id="restart">${won?'再挑战一次':'再跑一次'} <span>↗</span></button><br><button class="secondary" id="menu">更换角色 / 选择关卡</button></section></div>`:''}
+        ${over?`<div class="centerback"><section class="card"><div class="eyebrow">${won?'COURSE CLEAR / 闯关成功':'KEEP RUNNING / 本次成绩'}</div><h2>${won?'六境终点，冒险达成！':'下一次，再远一点。'}</h2>${won?`<div class="result-stars" aria-label="${stars} 星通关">${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</div>`:''}<div class="result">${this.score}<small> 分</small></div><div class="resultrow"><span>${Math.floor(this.travelled)} 米</span><span>${this.coins} 金币</span><span>最佳 ${this.best}</span></div><p>${c.name} · 技巧避障 ${this.dodges} 次 · 受伤 ${this.hits} 次<br>${won?'每格剩余生命奖励 200 分 · 收集 60 金币 / 无伤各加一星':'连拾金币最高 3 倍分 · 跳跃和下滑避障各得 25 分'}</p><button class="primary" id="restart">${won?'再挑战一次':'再跑一次'} <span>↗</span></button><br><button class="secondary" id="menu">更换角色 / 选择关卡</button></section></div>`:''}
         <div class="mobile-controls ${this.state!=='running'?'hidden':''}"><div><button id="left" aria-label="左移">←</button><button id="right" aria-label="右移">→</button></div><div><button id="slide" aria-label="下滑">↓<small>下滑</small></button><button id="jump" aria-label="跳跃">↑<small>跳跃</small></button></div></div>
         <footer class="footer"><div class="keys"><span><kbd>← →</kbd>换道</span><span><kbd>SPACE</kbd>跳跃</span><span><kbd>↓ / S</kbd>下滑</span><span><kbd>P</kbd>暂停</span></div><div class="note">BLENDER × COCOS CREATOR · ADVENTURE UPDATE</div></footer>`;
         const bind=(id:string,fn:()=>void)=>this.ui?.querySelector('#'+id)?.addEventListener('click',e=>{e.stopPropagation();fn();this.browserKeyboard?.focusCanvas();});
@@ -339,7 +387,7 @@ export class MarioRunner extends Component {
     }
     private refreshHUD(){
         if(!this.ui)return;const u=this.ui;
-        u.dataset.lane=String(this.lane);u.dataset.height=this.y.toFixed(3);u.dataset.slide=this.slide.toFixed(2);
+        u.dataset.slidePose=this.slideMix.toFixed(3);u.dataset.lane=String(this.lane);u.dataset.height=this.y.toFixed(3);u.dataset.slide=this.slide.toFixed(2);
         u.dataset.character=this.character.id;u.dataset.world=String(this.currentWorld);u.dataset.distance=this.distance.toFixed(1);u.dataset.speed=this.speed.toFixed(1);u.dataset.hearts=String(this.hearts);u.dataset.shield=String(this.shield);
         const set=(id:string,value:string)=>{const el=u.querySelector('#'+id);if(el&&el.textContent!==value)el.textContent=value;};
         const ready=this.state==='ready'||this.state==='loading';

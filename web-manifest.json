@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "files": {
     "application.js": "359f85dd922e2568aa991af95a5c356a0102042c8918252987bfbd37f2153eb2",
     "assets/internal/config.json": "ff88718cf539b399cfe8ea9d19ee8eafcebe3f76ffa7436fb56ce8ce6968418d",
@@ -8,7 +8,7 @@
     "assets/main/config.json": "e48ce069a4cb1aa249bf91ae1569780ddfd23dedad73f049895bdbcca20eab9c",
     "assets/main/import/05/05186b2fd.json": "88ff0bba2d44cf1c1d4b2245d117656317e889817b3f6ca3086b12f1b2406c27",
     "assets/main/import/fd/fd8ec536-a354-4a17-9c74-4f3883c378c8.json": "c2eee4552a460ed97591f527e127b95c811d5f796b9448f3f705974af9beba9d",
-    "assets/main/index.js": "8bf7bd1844bca20f96a3cd9acc987c08f5903fa3bf41f6b4584711c277ca3ac1",
+    "assets/main/index.js": "58113efd2e92002d52ad648f9eafa9e36e774bbb92df0ff28504f9cc3509af28",
     "assets/resources/config.json": "9bc9c9642d2b6b2690790e0e82de5ae0cdea9a1e7e373807794550710f7a590a",
     "assets/resources/import/04/0430a86e-9243-4bca-a989-d62ad7ba6128.json": "7ff1e2eac0801f16f803e4d4ef11b26cfe3831c0815683664f9a915cdb52cac0",
     "assets/resources/import/0a/0ad25e680.json": "032b2793a866588037e84eff46f884e2fe7884725f4c06eb8d21630c18e4972f",
@@ -123,7 +123,7 @@
     "cocos-js/spine.js-CPHn08RU.js": "c1da9149370487f6401f2d2c3dc41d04530397259110d1e5201811eff3640c42",
     "cocos-js/spine.wasm-D2KkhhGP.js": "b08d2b4949b36b3adf56e0563e0183d72c50cc8fb4a5cf630d858eb19aaa4c83",
     "favicon.ico": "0ee6ea35321de21db85992f64e4b846def7abac1222fa2250318878396df988e",
-    "index.html": "f6e1e6e2009427ee13402f2d67d66652c3492aa334a463903fbf0f6f22e87e02",
+    "index.html": "4292e37016d123b4d6b7d5788c7da7a59370688c42c85328e0d6ea3c943ed1dc",
     "index.js": "3f45e362e55d72cf38698a6824c4750f86b1793e41f5c94dab5bf2e67752964b",
     "src/chunks/bundle.js": "e5351504ac28fad2d2d9f9dc062605ca195114cf2bd235e39e82b8e60c32b378",
     "src/effect.bin": "b0d92f8307e3109abe8af8a863d68feb58cf4f49cf000b1d48fbb3dc3ad45556",
