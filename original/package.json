@@ -1,10 +1,10 @@
 {
   "name": "cloudpost-dash",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "An original courier adventure for the web and YouTube Playables",
   "scripts": {
-    "test": "node tools/test-rules.cjs && node tools/test-keyboard.cjs && node tools/test-playables.cjs && node tools/test-startup.cjs",
+    "test": "node tools/test-rules.cjs && node tools/test-keyboard.cjs && node tools/test-playables.cjs && node tools/test-startup.cjs && node tools/test-localization.cjs",
     "build": "node tools/verify-web.cjs",
     "prepare:web": "python3 tools/prepare_web.py",
     "package:playables": "python3 tools/package_playables.py"

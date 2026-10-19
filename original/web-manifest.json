@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.2",
   "files": {
     "THIRD_PARTY_LICENSES.txt": "54d7b7dfc86ea8a2de96792ffeb2615bffa51e08c12379fb70c98917285f65c0",
     "application.js": "56a2f8579b64bbad185d4e77426b514148d7ed8afbe80fd6bf9fdaab6c93422f",
@@ -10,7 +10,7 @@
     "assets/main/import/05/05186b2fd.json": "56a1c03566c5ce18c7e66be080e63f5ae7d518e25429b55937cc0985a86c1a39",
     "assets/main/import/ba/ba21476f-2866-4f81-9c4d-6e359316e448.json": "0a34e9263b215bb661d6334db6a255497c6cdac1f1c40b130f50bf9d91f4dd39",
     "assets/main/import/fd/fd8ec536-a354-4a17-9c74-4f3883c378c8.json": "c2eee4552a460ed97591f527e127b95c811d5f796b9448f3f705974af9beba9d",
-    "assets/main/index.js": "c97293965b7c61bfd5c90be271a85776fe092f025867dcf5289b427f73c7440e",
+    "assets/main/index.js": "930d2072861612601547afa41b1b7bcf78c7023e2a77c114a040d5a5c426f234",
     "assets/resources/config.json": "d2f1775985efb95d873eb7f174fb3a5fe00863ca711eda3a8c4ece374649efb3",
     "assets/resources/import/01/01f28c10-c047-422b-abda-bf166f7c11e2.json": "7ee85e72168a45b380db2b4a563d7b9881817d94a2987c98ae2ebe6c80b06d0b",
     "assets/resources/import/07/07d42a1c2.json": "427bb6eba09159d3ff4d6517b60e1a62530729acb64806f0647f991b31fff895",
@@ -52,7 +52,7 @@
     "assets/resources/native/c7/c71d5649-881a-47bb-aa25-55da249d8180@e8415.bin": "e609ab326717488f3067d59997b15c578cab101f70beb51963f0ca191e8a2f1b",
     "cocos-js/cc.js": "6431dff0f455b196a157c0298fc28886d98271bd40119faa82a031b329806336",
     "favicon.ico": "0ee6ea35321de21db85992f64e4b846def7abac1222fa2250318878396df988e",
-    "index.html": "07d6b4ef2cf5dfbbd34aeca069fba19ccc4494e08648fae0df30515fd80a15a6",
+    "index.html": "de53428c8a8ac2307a61a97c672ccd28af8e1797343a27795611aa69eac408e3",
     "index.js": "901d116f116f20da34565949ecc922f88a61ee6ddafa76d1600bdbb4d25f5d43",
     "src/chunks/bundle.js": "676505eab615bbe3437148994a411977623dbdd52c4336a00f17df52f3527e26",
     "src/effect.bin": "b0d92f8307e3109abe8af8a863d68feb58cf4f49cf000b1d48fbb3dc3ad45556",

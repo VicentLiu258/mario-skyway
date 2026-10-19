@@ -1,0 +1,1 @@
+html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#abdae0}#GameDiv{position:fixed;inset:0;width:100%!important;height:100%!important}#Cocos3dGameContainer,#GameCanvas{width:100%;height:100%;outline:none}canvas{display:block;touch-action:none}*{-webkit-tap-highlight-color:transparent}

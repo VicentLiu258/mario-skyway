@@ -2,7 +2,7 @@
 
 An original 3D courier runner created for AIBoomPrompt. Four animal/robot couriers carry parcels across six sky routes. Switch lanes, jump, slide, collect postal stamps, and chase a high score.
 
-Version: **1.0.1**. Public demo: [Cloudpost Dash](https://mario.aiboomprompt.com/cloudpost/).
+Version: **1.0.2**. Public demo: [Cloudpost Dash](https://mario.aiboomprompt.com/cloudpost/).
 
 ## Original cast and routes
 
@@ -68,7 +68,7 @@ The parent project's publish script uses `tools/package_public.py` to publish a 
 - Official SDK loads before game code. The loading screen acknowledges the first frame; the enabled main menu acknowledges game readiness.
 - YouTube audio state controls audio output; SDK pause/resume freezes/releases the Cocos director and preserves a separate manual pause.
 - In Playables, progress uses SDK cloud saves exclusively. Load failure prevents overwriting cloud data; writes are serialized. One global high-score dimension matches the stored maximum of the route records.
-- In an ordinary browser, scores use a separate local `cloudpost-v1` save. The fully usable UI is English.
+- In an ordinary browser, scores use a separate local `cloudpost-v1` save. The fully usable UI supports English and Simplified Chinese.
 - Local checks passed: 192 full route simulations, real four-character sliding geometry, keyboard routing, SDK failure/mute/pause/save tests, legal bundle paths, size limits, and a real 400 m Starbridge run under the documented CSP (Moss: 71 stamps, 8 skill dodges, no hits, 3 stars).
 
 These checks are **not YouTube certification**. The official test-suite page did not expose a runnable test interface in this session. Actual YouTube web/app ingestion, Android and iOS testing, licensing/onboarding and certification remain subject to portal access and the platform review.
@@ -92,3 +92,11 @@ Controlled cold-load checks used `tools/benchmark_loading.py`: browser cache dis
 | Bytes transferred by readiness | 3,842,187 | 1,046,645 |
 
 Average readiness improved by 68.7%; pre-play transfer fell 72.8%. Time varies with device and network. Visual comparison, all four courier selections, immediate arrow/Space/down controls, TypeScript, all 192 route simulations, SDK lifecycle tests, progressive-loader failure/retry tests and 9 packaging tests passed.
+
+## Chinese and English — 1.0.2
+
+The top-right language button switches the standalone website between Simplified Chinese and English without restarting a run or changing scores. First visit follows the browser language (Chinese locales use Simplified Chinese; other languages fall back to English). An explicit choice is remembered in the independent `cloudpost-language` local-storage key. Blocked storage does not prevent play or switching.
+
+`localization.js` is embedded into the existing HTML, so it adds no network requests, libraries or downloaded fonts. It translates text nodes and accessibility labels, including loading errors, menus, all six routes, four couriers and their abilities, live HUD, hazards, power-ups, pause and results. Game IDs and save keys remain unchanged.
+
+Inside YouTube Playables, the language comes exclusively from `ytgame.system.getLanguage()`; no browser locale/local storage is read and no language preference is written into cloud saves. The independent website's language toggle is hidden there.

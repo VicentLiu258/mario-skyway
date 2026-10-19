@@ -23,6 +23,8 @@ settings_path.write_text(json.dumps(settings,separators=(',',':')))
 imports=json.loads((dst/'src/import-map.json').read_text())['imports']
 engine=imports['cc'].removeprefix('../').removeprefix('./../')
 html=(dst/'index.html').read_text()
+assert '<!-- cloudpost-language -->' in html
+html=html.replace('<!-- cloudpost-language -->','<script>\n'+(base/'localization.js').read_text()+'\n</script>')
 html=html.replace('</head>',f'    <link rel="preload" href="./{engine}" as="script">\n  </head>')
 (dst/'index.html').write_text(html)
 # Surface loader failures instead of leaving an unchanging splash forever.
