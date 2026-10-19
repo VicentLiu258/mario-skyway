@@ -21,6 +21,7 @@ System.register([], function (_export, _context) {
           key: "init",
           value: function init(engine) {
             cc = engine;
+            if (window.cloudpostBoot) window.cloudpostBoot('Preparing the sky routes…', 45);
             cc.game.onPostBaseInitDelegate.add(this.onPostInitBase.bind(this));
             cc.game.onPostSubsystemInitDelegate.add(this.onPostSystemInit.bind(this));
           }

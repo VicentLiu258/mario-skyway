@@ -18,6 +18,7 @@ export class CloudpostRunner extends Component {
     private nextRow=0; private rowIndex=0; private speed=10; private touch={x:0,y:0};
     private ui: HTMLElement|null=null; private audio: AudioContext|null=null; private muted=false;
     private loadError=''; private shadow!:Node; private heldKeys=new Set<number>();
+    private loadingCrew=new Set<number>(); private failedCrew=new Set<number>(); private backgroundStarted=false;
     private browserKeyboard: BrowserKeyboard|null=null; private platform:PlayablesBridge|null=null; private platformReady=false; private assetsReady=false; private platformWasRunning=false;
     private selected=0; private startWorld=0; private endless=false; private currentWorld=-1;
     private prefabs:Record<string,Prefab>={}; private roads:Node[]=[]; private verges:Node[]=[];
@@ -47,18 +48,50 @@ export class CloudpostRunner extends Component {
         input.on(Input.EventType.TOUCH_END,this.onTouchEnd,this);
         input.on(Input.EventType.TOUCH_CANCEL,this.onTouchCancel,this);
         if(typeof document!=='undefined'&&!this.platform?.inPlayables)document.addEventListener('visibilitychange',this.onVisibility);
-        let loaded=0;
-        for(const c of CHARACTERS)resources.load(c.path,Prefab,(err,prefab)=>{
-            if(err){this.loadError=c.name+' could not load. Please reload.';this.refreshUI();console.error('Character import failed',c.path,err);return;}
-            this.prefabs[c.id]=prefab;loaded++;
-            if(loaded===CHARACTERS.length){this.assetsReady=true;this.completeLoading();}
+        this.bootProgress('Preparing Pip for the first delivery…',70);
+        this.loadCourier(0);
+    }
+    private bootProgress(label:string,progress:number){
+        if(typeof window!=='undefined')(window as any).cloudpostBoot?.(label,progress);
+    }
+    private loadCourier(index:number,done?:()=>void){
+        const c=CHARACTERS[index];
+        if(this.prefabs[c.id]){done?.();return;}
+        if(this.loadingCrew.has(index))return;
+        this.loadingCrew.add(index);this.failedCrew.delete(index);
+        resources.load(c.path,Prefab,(finished,total)=>{
+            if(index===0)this.bootProgress('Preparing Pip for the first delivery…',70+Math.round(25*finished/Math.max(1,total)));
+        },(err,prefab)=>{
+            if(!this.isValid)return;
+            this.loadingCrew.delete(index);
+            if(err){
+                this.failedCrew.add(index);
+                if(index===0){
+                    this.loadError='Pip could not load. Please try again.';
+                    if(typeof window!=='undefined')(window as any).cloudpostBootError?.();
+                }
+                console.error('Character import failed',c.path,err);
+            }else{
+                this.prefabs[c.id]=prefab;
+                if(index===0){this.assetsReady=true;this.completeLoading();}
+            }
+            // Background completion must not rebuild controls or steal focus mid-run.
+            if(this.state==='ready'||this.state==='loading')this.refreshUI(false);
+            done?.();
         });
+    }
+    private loadRemainingCrew(index=1){
+        if(index<CHARACTERS.length)this.loadCourier(index,()=>this.loadRemainingCrew(index+1));
     }
     private completeLoading(){
         if(!this.assetsReady||!this.platformReady||this.platform?.paused||this.state!=='loading')return;
         this.selectCharacter(0);this.applyWorld(0);this.state='ready';
         if(typeof document!=='undefined')document.getElementById('boot-splash')?.remove();
         this.loadBest();this.refreshUI();this.platform?.firstFrameReady();this.platform?.gameReady();
+        if(this.ui&&typeof performance!=='undefined')this.ui.dataset.readyMs=performance.now().toFixed(0);
+        // Pip alone unlocks play. Load the remaining couriers one at a time after
+        // the first usable menu has rendered, avoiding contention on slow links.
+        if(!this.backgroundStarted){this.backgroundStarted=true;this.scheduleOnce(()=>this.loadRemainingCrew(),.1);}
     }
     private platformPause=()=>{
         this.platformWasRunning=this.state==='running';if(this.platformWasRunning)this.state='paused';
@@ -78,6 +111,7 @@ export class CloudpostRunner extends Component {
     // with the fullscreen CSS container, including browser panel resizing.
     private onResize=()=>{gameScreen.windowSize=new Size(window.innerWidth*gameScreen.devicePixelRatio,window.innerHeight*gameScreen.devicePixelRatio);};
     private selectCharacter(index:number){
+        if(!this.prefabs[CHARACTERS[index].id])return;
         this.selected=index;if(this.model)this.model.destroy();this.pivots={};this.rest={};this.slideMix=0;
         const prefab=this.prefabs[this.character.id];if(!prefab)return;
         this.model=instantiate(prefab);this.model.parent=this.avatar;this.model.setScale(.64,.64,.64);
@@ -394,11 +428,11 @@ export class CloudpostRunner extends Component {
         `;document.head.appendChild(style);this.ui=document.createElement('div');this.ui.id='cloudpost-ui';document.body.appendChild(this.ui);this.refreshUI();
     }
     private refreshUI(focusCanvas=true){
-        if(!this.ui)return;this.ui.dataset.state=this.state;this.ui.dataset.version='1.0.0';
+        if(!this.ui)return;this.ui.dataset.state=this.state;this.ui.dataset.version='1.0.1';
         const ready=this.state==='ready'||this.state==='loading',over=this.state==='over'||this.state==='won',won=this.state==='won';
         const c=this.character,world=WORLDS[this.startWorld],stars=1+(this.coins>=60?1:0)+(this.hits===0?1:0);
         this.ui.innerHTML=`<header class="topbar"><div class="brand"><div class="badge">◇</div><div>CLOUDPOST DASH<small>A SMALL PARCEL. A BIG ADVENTURE.</small></div></div><div class="stats"><div class="stat"><small>DISTANCE</small><b id="distance">0<em>m</em></b></div><div class="stat"><small>STAMPS</small><b id="coins" style="color:#bf811e">0</b></div><div class="stat"><small>HEARTS</small><b id="hearts" style="color:#dc8753;font-size:19px">♥ ♥ ♥</b></div></div><div class="actions">${this.platform?.inPlayables?'':`<button class="iconbtn" id="sound" aria-label="Toggle sound">${this.muted?'♫̸':'♫'}</button>`}<button class="iconbtn ${ready||over?'hidden':''}" id="pause" aria-label="Pause or resume">${this.state==='paused'?'▶':'Ⅱ'}</button></div></header>
-        ${ready?`<section class="hero"><div class="eyebrow">FOUR COURIERS. SIX ROUTES. ONE SPECIAL DELIVERY.</div><h1>Make every<span>delivery count.</span></h1><p>Dash across sky gardens and starlit bridges.<br>Jump, slide, and collect stamps on a journey beyond the clouds.</p><div class="select-label">CHOOSE A ROUTE / LATER ROUTES ARE HARDER</div><div class="world-select">${WORLDS.map((w,i)=>`<button id="world-${i}" aria-pressed="${i===this.startWorld}"><small>ROUTE 0${i+1} · ${'★'.repeat(Math.min(3,Math.ceil((i+1)/2)))}</small>${w.name}</button>`).join('')}</div><div class="world-description">${world.hint}</div><div class="mode-select"><button id="campaign" aria-pressed="${!this.endless}">Delivery · ${FINISH_DISTANCE-this.startWorld*WORLD_LENGTH} m</button><button id="endless" aria-pressed="${this.endless}">Endless · faster pace</button></div><button class="primary" id="start" ${this.state==='loading'?'disabled':''}>${this.loadError||(this.state==='loading'?'Gathering the crew…':'Start delivery')}<span>↗</span></button><div class="subnote">All-time best ${this.platform?.globalBest||0} · Route best ${this.best.toLocaleString()} · Space to depart</div></section><section class="roster"><div class="roster-title">MEET YOUR COURIER <small>A different way to make the journey</small></div><div class="character-grid">${CHARACTERS.map((ch,i)=>`<button class="character" id="character-${i}" style="--accent:${ch.color}" aria-pressed="${i===this.selected}" ${this.state==='loading'?'disabled':''}><span class="avatar-icon">${ch.badge}</span><span><strong>${ch.name}</strong><small>${ch.tag}</small></span></button>`).join('')}</div><div class="skill-note"><b>${c.name}'s perk</b> · ${c.skill}</div></section>`:`<div class="stagebar"><b id="stage-name"></b><div class="track"><i id="progress"></i></div><small id="stage-distance"></small></div><div id="notice" role="status" class="notice hidden"></div><div id="cue" class="cue hidden"></div><div class="mission"><b id="score"></b><br><span id="mission"></span></div><div id="power" class="power"></div>`}
+        ${ready?`<section class="hero"><div class="eyebrow">FOUR COURIERS. SIX ROUTES. ONE SPECIAL DELIVERY.</div><h1>Make every<span>delivery count.</span></h1><p>Dash across sky gardens and starlit bridges.<br>Jump, slide, and collect stamps on a journey beyond the clouds.</p><div class="select-label">CHOOSE A ROUTE / LATER ROUTES ARE HARDER</div><div class="world-select">${WORLDS.map((w,i)=>`<button id="world-${i}" aria-pressed="${i===this.startWorld}"><small>ROUTE 0${i+1} · ${'★'.repeat(Math.min(3,Math.ceil((i+1)/2)))}</small>${w.name}</button>`).join('')}</div><div class="world-description">${world.hint}</div><div class="mode-select"><button id="campaign" aria-pressed="${!this.endless}">Delivery · ${FINISH_DISTANCE-this.startWorld*WORLD_LENGTH} m</button><button id="endless" aria-pressed="${this.endless}">Endless · faster pace</button></div><button class="primary" id="start" ${this.state==='loading'?'disabled':''}>${this.loadError||(this.state==='loading'?'Gathering the crew…':'Start delivery')}<span>↗</span></button><div class="subnote">All-time best ${this.platform?.globalBest||0} · Route best ${this.best.toLocaleString()} · Space to depart</div></section><section class="roster"><div class="roster-title">MEET YOUR COURIER <small>A different way to make the journey</small></div><div class="character-grid">${CHARACTERS.map((ch,i)=>`<button class="character" id="character-${i}" style="--accent:${ch.color}" aria-pressed="${i===this.selected}" ${this.state==='loading'||(!this.prefabs[ch.id]&&!this.failedCrew.has(i))?'disabled':''}><span class="avatar-icon">${ch.badge}</span><span><strong>${ch.name}</strong><small>${this.failedCrew.has(i)?'Tap to retry':this.prefabs[ch.id]?ch.tag:'Arriving…'}</small></span></button>`).join('')}</div><div class="skill-note"><b>${c.name}'s perk</b> · ${c.skill}</div></section>`:`<div class="stagebar"><b id="stage-name"></b><div class="track"><i id="progress"></i></div><small id="stage-distance"></small></div><div id="notice" role="status" class="notice hidden"></div><div id="cue" class="cue hidden"></div><div class="mission"><b id="score"></b><br><span id="mission"></span></div><div id="power" class="power"></div>`}
         ${this.state==='paused'?`<div class="centerback"><section class="card"><div class="eyebrow">TAKE A BREATH</div><h2>Your parcel can wait.</h2><p>${c.name} · ${WORLDS[Math.max(0,this.currentWorld)].name}<br>Slide under blue sorting beams. Jump over heat vents.</p><button class="primary" id="resume">Resume delivery <span>↗</span></button><br><button class="secondary" id="menu">Couriers & routes</button></section></div>`:''}
         ${over?`<div class="centerback"><section class="card"><div class="eyebrow">${won?'DELIVERY COMPLETE':'A LITTLE FURTHER NEXT TIME'}</div><h2>${won?'Signed, sealed, delivered!':'Every route is a new start.'}</h2>${won?`<div class="result-stars" aria-label="${stars} star finish">${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</div>`:''}<div class="result">${this.score}<small> points</small></div><div class="resultrow"><span>${Math.floor(this.travelled)} m</span><span>${this.coins} stamps</span><span>Route best ${this.best}</span></div><p>${c.name} · ${this.dodges} skill dodges · ${this.hits} hits<br>All-time best ${Math.max(this.platform?.globalBest||0,this.score)} points<br>${won?'Each heart adds 200 points. 60 stamps / no hits each add a star.':'Stamp chains reach 3× points. Skill dodges add 25 points.'}</p><button class="primary" id="restart">${won?'Deliver again':'Try the route again'} <span>↗</span></button><br><button class="secondary" id="menu">Couriers & routes</button></section></div>`:''}
         <div class="mobile-controls ${this.state!=='running'?'hidden':''}"><div><button id="left" aria-label="Move left">←</button><button id="right" aria-label="Move right">→</button></div><div><button id="slide" aria-label="Slide">↓<small>SLIDE</small></button><button id="jump" aria-label="Jump">↑<small>JUMP</small></button></div></div>
@@ -406,7 +440,7 @@ export class CloudpostRunner extends Component {
         const bind=(id:string,fn:()=>void)=>this.ui?.querySelector('#'+id)?.addEventListener('click',e=>{e.stopPropagation();if(this.platform?.paused)return;fn();this.browserKeyboard?.focusCanvas();});
         bind('start',this.begin);bind('restart',this.begin);bind('resume',this.pause);bind('pause',this.pause);bind('menu',this.menu);
         bind('sound',()=>{this.muted=!this.muted;this.syncAudio();this.refreshUI();});bind('left',()=>this.shift(-1));bind('right',()=>this.shift(1));bind('jump',()=>this.jump());bind('slide',()=>this.duck());
-        CHARACTERS.forEach((_,i)=>bind('character-'+i,()=>this.selectCharacter(i)));
+        CHARACTERS.forEach((_,i)=>bind('character-'+i,()=>{if(this.failedCrew.has(i)){this.loadCourier(i);this.refreshUI(false);}else this.selectCharacter(i);}));
         WORLDS.forEach((_,i)=>bind('world-'+i,()=>{this.startWorld=i;this.applyWorld(i);this.loadBest();this.refreshUI();}));
         bind('campaign',()=>{this.endless=false;this.loadBest();this.refreshUI();});bind('endless',()=>{this.endless=true;this.loadBest();this.refreshUI();});
         this.refreshHUD();if(focusCanvas)this.browserKeyboard?.focusCanvas();

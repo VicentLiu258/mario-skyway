@@ -8,5 +8,8 @@ for(const [file,sha] of Object.entries(manifest.files)){
 for(const file of ['index.html','application.js','src/settings.json','assets/resources/config.json'])assert.ok(manifest.files[file],`missing ${file}`);
 const settings=JSON.parse(fs.readFileSync(path.join(root,'web/src/settings.json')));
 assert.equal(settings.CocosEngine,'3.8.8');
+assert.equal(settings.splashScreen.totalTime,0,'HTML splash must not add an artificial startup delay');
+assert.ok(!Object.keys(manifest.files).some(f=>/bullet|spine|physx/.test(f)),'unused native engines must stay out of the download');
+assert.ok(fs.statSync(path.join(root,'web/cocos-js/cc.js')).size<1500000,'engine startup size budget');
 assert.ok(fs.readFileSync(path.join(root,'web/index.html'),'utf8').includes(`content="${pkg.version}"`));
 console.log(`Verified ${Object.keys(manifest.files).length} runtime files for Cloudpost Dash ${pkg.version}`);

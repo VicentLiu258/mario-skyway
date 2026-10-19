@@ -11,6 +11,7 @@ import unittest
 import zipfile
 
 import package_playables as pack
+import package_public as public
 
 UUID = '01234567-89ab-cdef-0123-456789abcdef'
 OLD_PATH = f'assets/resources/native/01/{UUID}@a12b3.bin'
@@ -84,6 +85,23 @@ class BundleTests(unittest.TestCase):
         self.assertEqual(json.loads(self.report.read_text())['zip_sha256'], report['zip_sha256'])
         old_hash = report['zip_sha256']
         self.assertEqual(self.package()['zip_sha256'], old_hash, 'identical runtime inputs produce the same ZIP')
+
+    def test_public_entry_is_offline_capable_and_versions_every_runtime_url(self) -> None:
+        self.package()
+        candidate = (self.out / 'index.html').read_bytes()
+        target = self.root / 'public/cloudpost'
+        revision = public.publish(self.out, target)
+        html = (target / 'index.html').read_text()
+        self.assertNotIn(pack.SDK_URL, html)
+        self.assertIn(f'<base href="./releases/{revision}/">', html)
+        self.assertTrue((target / 'releases' / revision / NEW_PATH).is_file())
+        self.assertEqual((self.out / 'index.html').read_bytes(), candidate, 'platform candidate must remain SDK-first')
+        self.assertEqual(public.publish(self.out, target), revision)
+        (self.out / 'index.js').write_text('/* updated game */')
+        updated = public.publish(self.out, target)
+        self.assertNotEqual(updated, revision, 'changed runtime cannot reuse immutable cache URLs')
+        self.assertTrue((target / 'releases' / revision / 'index.js').is_file(), 'open tabs can finish deferred downloads after deployment')
+        self.assertIn(updated, (target / 'index.html').read_text())
 
     @unittest.skipUnless(shutil.which('node'), 'Node.js is needed to execute the generated Cocos application')
     def test_public_pipe_rewrites_only_final_mapped_urls(self) -> None:

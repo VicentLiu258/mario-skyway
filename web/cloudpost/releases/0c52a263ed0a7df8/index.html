@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="distribution" content="standalone-web">
+    <meta name="application-version" content="1.0.1">
+
+    <title>Cloudpost Dash</title>
+
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1,minimal-ui=true"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta name="full-screen" content="yes"/>
+    <meta name="x5-fullscreen" content="true"/>
+    <meta name="360-fullscreen" content="true"/>
+
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <link rel="stylesheet" type="text/css" href="./style.css"/>
+    <link rel="icon" href="favicon.ico"/>
+      <link rel="preload" href="./cocos-js/cc.js" as="script">
+  </head>
+  <body>
+
+
+    <div id="boot-splash" role="status" style="position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:#f6f0df;color:#275d59;font:700 20px system-ui;text-align:center"><div><div style="font-size:48px;margin-bottom:16px">◇</div>CLOUDPOST DASH<small id="boot-status" style="display:block;margin-top:18px;font-size:13px;font-weight:400">Opening the sky routes…</small><progress id="boot-progress" aria-label="Loading progress" max="100" value="10" style="width:200px;height:6px;display:block;margin:20px auto;accent-color:#398761"></progress><button id="boot-retry" hidden onclick="location.reload()" style="padding:10px 20px;border:1px solid #398761;border-radius:8px;background:#fff;color:#275d59">Try again</button></div></div>
+    <script>
+      window.cloudpostBoot = function (label, progress) {
+        var status = document.getElementById('boot-status');
+        var bar = document.getElementById('boot-progress');
+        if (status) status.textContent = label;
+        if (bar) bar.value = progress;
+      };
+      window.cloudpostBootError = function () {
+        window.cloudpostBoot('The connection was interrupted. Please try again.', 0);
+        var retry = document.getElementById('boot-retry');
+        if (retry) retry.hidden = false;
+      };
+      window.addEventListener('error', function (event) {
+        if (event.target && event.target.tagName === 'SCRIPT') window.cloudpostBootError();
+      }, true);
+      setTimeout(function () {
+        if (document.getElementById('boot-splash')) {
+          window.cloudpostBoot('Still loading on this connection…', 20);
+          document.getElementById('boot-retry').hidden = false;
+        }
+      }, 15000);
+      if (window.ytgame && window.ytgame.IN_PLAYABLES_ENV) {
+        window.ytgame.game.firstFrameReady();
+        window.__cloudpostFirstFrameReady = true;
+      }
+    </script>
+    <div id="GameDiv" cc_exact_fit_screen="true" style="width: 1280px; height: 960px;">
+      <div id="Cocos3dGameContainer">
+        <canvas id="GameCanvas" width="1280" height="960" tabindex="99"></canvas>
+      </div>
+    </div>
+    <!-- Polyfills bundle. -->
+
+<script src="src/polyfills.bundle.js" charset="utf-8"> </script>    
+
+
+<!-- SystemJS support. -->
+<script src="src/system.bundle.js" charset="utf-8"> </script>
+
+<!-- Import map -->
+<script src="src/import-map.json" type="systemjs-importmap" charset="utf-8"> </script>
+
+<script>
+    System.import('./index.js').catch(function(err) { console.error(err); })
+</script>
+  </body>
+</html>

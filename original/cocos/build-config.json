@@ -23,5 +23,14 @@
         "asyncFunctions": true
       }
     }
-  }
+  },
+  "includeModules": [
+    "base",
+    "gfx-webgl",
+    "gfx-webgl2",
+    "3d",
+    "primitive",
+    "custom-pipeline",
+    "custom-pipeline-builtin-scripts"
+  ]
 }

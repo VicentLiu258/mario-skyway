@@ -16,7 +16,7 @@ System.register(["./application.js"], function (_export, _context) {
       }).then(function () {
         return application.start();
       })["catch"](function (err) {
-        console.error(err);
+        console.error(err); if (window.cloudpostBootError) window.cloudpostBootError();
       });
     }
   };

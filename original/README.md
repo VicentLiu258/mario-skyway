@@ -2,7 +2,7 @@
 
 An original 3D courier runner created for AIBoomPrompt. Four animal/robot couriers carry parcels across six sky routes. Switch lanes, jump, slide, collect postal stamps, and chase a high score.
 
-Version: **1.0.0**. Public demo: [Cloudpost Dash](https://mario.aiboomprompt.com/cloudpost/).
+Version: **1.0.1**. Public demo: [Cloudpost Dash](https://mario.aiboomprompt.com/cloudpost/).
 
 ## Original cast and routes
 
@@ -61,7 +61,7 @@ python3 tools/serve_playables.py
 
 The ZIP has `index.html` at its root and contains only runtime assets and the runtime license notice. Source maps, Blender sources and application contact details are excluded. The source-delivery ZIP is a different artifact and must not be uploaded as the Playables runtime.
 
-The parent project's publish script deploys the exact Playables candidate at `/cloudpost/` alongside the previous browser prototype.
+The parent project's publish script uses `tools/package_public.py` to publish a standalone entry at `/cloudpost/`. This entry omits the blocking YouTube SDK request; the Playables candidate ZIP retains the SDK as its first script. Public runtime files live under a content-addressed `releases/<hash>/` directory with immutable caching. The entry is revalidated on each visit, and one previous release is retained so open tabs can complete deferred downloads.
 
 ## YouTube integration and validation status
 
@@ -74,3 +74,21 @@ The parent project's publish script deploys the exact Playables candidate at `/c
 These checks are **not YouTube certification**. The official test-suite page did not expose a runnable test interface in this session. Actual YouTube web/app ingestion, Android and iOS testing, licensing/onboarding and certification remain subject to portal access and the platform review.
 
 The public interest form is an initial consideration request, not an approval. On 2026-10-19, after the applicant confirmed the exact content and licensing authority, the existing interest application was updated to append Cloudpost Dash. Google Forms displayed “Your answers have been submitted.” The original game, applicant identity, intended game count and confirmed monthly-user range were retained. The publishing channel was updated to Web. This confirms receipt of the consideration request, not onboarding, certification or publication approval. No review outcome or response date is guaranteed.
+
+## Loading optimization — 1.0.1
+
+- Build only the 3D renderer, primitive meshes and active render pipeline; remove unused Bullet, Spine, 2D, video and other engine modules. The engine script is 1,271,802 bytes instead of 3,133,775 bytes (59.4% smaller).
+- Preload the engine while the SystemJS entry chain loads. Use the visible HTML progress screen without a second fixed two-second canvas splash. Failed script/default-character loads expose a retry button.
+- Load Pip first and enable play after platform save initialization. Load Moss, Kite and Rook sequentially after the first usable menu; failed optional downloads remain retryable and never block a running game. Background completions do not rebuild controls or steal focus during gameplay.
+- Preserve the Playables SDK-first candidate and its pause/audio/cloud-save contract. The standalone website makes no external SDK startup request.
+
+Controlled cold-load checks used `tools/benchmark_loading.py`: browser cache disabled by `no-store`, 100 ms response latency and shared 1 MiB/s transfer bandwidth. The old SDK request was replaced by a local no-op for both comparisons, so these figures exclude any additional delay from blocked YouTube connectivity. This is a local benchmark, not real-user production telemetry.
+
+| Metric | 1.0.0 | 1.0.1 |
+|---|---:|---:|
+| First usable menu, run 1 | 8,297 ms | 2,606 ms |
+| First usable menu, run 2 | 8,457 ms | 2,637 ms |
+| Requests completed by readiness | 56 | 27 |
+| Bytes transferred by readiness | 3,842,187 | 1,046,645 |
+
+Average readiness improved by 68.7%; pre-play transfer fell 72.8%. Time varies with device and network. Visual comparison, all four courier selections, immediate arrow/Space/down controls, TypeScript, all 192 route simulations, SDK lifecycle tests, progressive-loader failure/retry tests and 9 packaging tests passed.

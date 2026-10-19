@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <script src="https://www.youtube.com/game_api/v1"></script>
-    <meta name="application-version" content="1.0.0">
+    <meta name="application-version" content="1.0.1">
 
     <title>Cloudpost Dash</title>
 
@@ -24,8 +24,28 @@
   <body>
 
 
-    <div id="boot-splash" role="status" style="position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:#f6f0df;color:#275d59;font:700 20px system-ui;text-align:center"><div><div style="font-size:48px;margin-bottom:16px">◇</div>CLOUDPOST DASH<small style="display:block;margin-top:18px;font-size:13px;font-weight:400">Loading the courier crew…</small></div></div>
+    <div id="boot-splash" role="status" style="position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:#f6f0df;color:#275d59;font:700 20px system-ui;text-align:center"><div><div style="font-size:48px;margin-bottom:16px">◇</div>CLOUDPOST DASH<small id="boot-status" style="display:block;margin-top:18px;font-size:13px;font-weight:400">Opening the sky routes…</small><progress id="boot-progress" aria-label="Loading progress" max="100" value="10" style="width:200px;height:6px;display:block;margin:20px auto;accent-color:#398761"></progress><button id="boot-retry" hidden onclick="location.reload()" style="padding:10px 20px;border:1px solid #398761;border-radius:8px;background:#fff;color:#275d59">Try again</button></div></div>
     <script>
+      window.cloudpostBoot = function (label, progress) {
+        var status = document.getElementById('boot-status');
+        var bar = document.getElementById('boot-progress');
+        if (status) status.textContent = label;
+        if (bar) bar.value = progress;
+      };
+      window.cloudpostBootError = function () {
+        window.cloudpostBoot('The connection was interrupted. Please try again.', 0);
+        var retry = document.getElementById('boot-retry');
+        if (retry) retry.hidden = false;
+      };
+      window.addEventListener('error', function (event) {
+        if (event.target && event.target.tagName === 'SCRIPT') window.cloudpostBootError();
+      }, true);
+      setTimeout(function () {
+        if (document.getElementById('boot-splash')) {
+          window.cloudpostBoot('Still loading on this connection…', 20);
+          document.getElementById('boot-retry').hidden = false;
+        }
+      }, 15000);
       if (window.ytgame && window.ytgame.IN_PLAYABLES_ENV) {
         window.ytgame.game.firstFrameReady();
         window.__cloudpostFirstFrameReady = true;

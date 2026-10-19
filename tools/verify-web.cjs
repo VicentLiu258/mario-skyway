@@ -14,6 +14,11 @@ if(fs.existsSync(path.join(root,'original/web-manifest.json'))){
  const original=JSON.parse(fs.readFileSync(path.join(root,'original/web-manifest.json')));
  assert.ok(manifest.files['cloudpost/index.html'],'original game demo must be deployed');
  assert.ok(fs.readFileSync(path.join(root,'web/cloudpost/index.html'),'utf8').includes(`content="${original.version}"`),'original demo version');
+ const entry=fs.readFileSync(path.join(root,'web/cloudpost/index.html'),'utf8');
+ assert.ok(!entry.includes('<script src="https://www.youtube.com'),'standalone startup cannot depend on YouTube connectivity');
+ const release=entry.match(/<base href="\.\/releases\/([a-f0-9]{16})\/">/);
+ assert.ok(release,'standalone assets must have versioned cache URLs');
+ assert.ok(manifest.files[`cloudpost/releases/${release[1]}/index.js`],'current release exists');
  for(const file of Object.keys(manifest.files).filter(f=>f.startsWith('cloudpost/')))assert.ok(!file.includes('@'),'Playables demo uses legal asset filenames');
  console.log(`Cloudpost Dash ${original.version} demo included at /cloudpost/`);
 }
