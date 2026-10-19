@@ -10,3 +10,10 @@ const settings=JSON.parse(fs.readFileSync(path.join(root,'web/src/settings.json'
 assert.equal(settings.CocosEngine,'3.8.8');
 assert.ok(fs.readFileSync(path.join(root,'web/index.html'),'utf8').includes(`content="${pkg.version}"`));
 console.log(`Verified ${Object.keys(manifest.files).length} runtime files for Mario Skyway ${pkg.version}`);
+if(fs.existsSync(path.join(root,'original/web-manifest.json'))){
+ const original=JSON.parse(fs.readFileSync(path.join(root,'original/web-manifest.json')));
+ assert.ok(manifest.files['cloudpost/index.html'],'original game demo must be deployed');
+ assert.ok(fs.readFileSync(path.join(root,'web/cloudpost/index.html'),'utf8').includes(`content="${original.version}"`),'original demo version');
+ for(const file of Object.keys(manifest.files).filter(f=>f.startsWith('cloudpost/')))assert.ok(!file.includes('@'),'Playables demo uses legal asset filenames');
+ console.log(`Cloudpost Dash ${original.version} demo included at /cloudpost/`);
+}

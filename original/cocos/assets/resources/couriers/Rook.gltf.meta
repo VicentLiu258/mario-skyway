@@ -1,0 +1,256 @@
+{
+  "ver": "2.3.14",
+  "importer": "gltf",
+  "imported": true,
+  "uuid": "73a51ef0-2c3e-475a-80b2-ef23dbbabc09",
+  "files": [],
+  "subMetas": {
+    "88b23": {
+      "importer": "gltf-mesh",
+      "uuid": "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@88b23",
+      "displayName": "",
+      "id": "88b23",
+      "name": "Cube.010.mesh",
+      "userData": {
+        "gltfIndex": 0,
+        "triangleCount": 1256
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "0842b": {
+      "importer": "gltf-mesh",
+      "uuid": "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@0842b",
+      "displayName": "",
+      "id": "0842b",
+      "name": "Cube.017.mesh",
+      "userData": {
+        "gltfIndex": 1,
+        "triangleCount": 1256
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "c6e33": {
+      "importer": "gltf-mesh",
+      "uuid": "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@c6e33",
+      "displayName": "",
+      "id": "c6e33",
+      "name": "Cube.002.mesh",
+      "userData": {
+        "gltfIndex": 2,
+        "triangleCount": 3152
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "e8415": {
+      "importer": "gltf-mesh",
+      "uuid": "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@e8415",
+      "displayName": "",
+      "id": "e8415",
+      "name": "Sphere.006.mesh",
+      "userData": {
+        "gltfIndex": 3,
+        "triangleCount": 1748
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "c172e": {
+      "importer": "gltf-mesh",
+      "uuid": "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@c172e",
+      "displayName": "",
+      "id": "c172e",
+      "name": "Cube.013.mesh",
+      "userData": {
+        "gltfIndex": 4,
+        "triangleCount": 1004
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "181b3": {
+      "importer": "gltf-mesh",
+      "uuid": "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@181b3",
+      "displayName": "",
+      "id": "181b3",
+      "name": "Cube.020.mesh",
+      "userData": {
+        "gltfIndex": 5,
+        "triangleCount": 1004
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "d8953": {
+      "importer": "gltf-material",
+      "uuid": "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@d8953",
+      "displayName": "",
+      "id": "d8953",
+      "name": "Rook / main.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "c23da": {
+      "importer": "gltf-material",
+      "uuid": "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@c23da",
+      "displayName": "",
+      "id": "c23da",
+      "name": "Rook / dark.material",
+      "userData": {
+        "gltfIndex": 1
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "cbf5b": {
+      "importer": "gltf-material",
+      "uuid": "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@cbf5b",
+      "displayName": "",
+      "id": "cbf5b",
+      "name": "Rook / light.material",
+      "userData": {
+        "gltfIndex": 2
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "209f8": {
+      "importer": "gltf-material",
+      "uuid": "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@209f8",
+      "displayName": "",
+      "id": "209f8",
+      "name": "Rook / accent.material",
+      "userData": {
+        "gltfIndex": 3
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "aeead": {
+      "importer": "gltf-material",
+      "uuid": "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@aeead",
+      "displayName": "",
+      "id": "aeead",
+      "name": "Rook / strap.material",
+      "userData": {
+        "gltfIndex": 4
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "da469": {
+      "importer": "gltf-scene",
+      "uuid": "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@da469",
+      "displayName": "",
+      "id": "da469",
+      "name": "Rook.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [],
+    "lods": {
+      "enable": false,
+      "hasBuiltinLOD": false,
+      "options": [
+        {
+          "screenRatio": 0.25,
+          "faceCount": 1
+        },
+        {
+          "screenRatio": 0.125,
+          "faceCount": 0.25
+        },
+        {
+          "screenRatio": 0.01,
+          "faceCount": 0.1
+        }
+      ]
+    },
+    "assetFinder": {
+      "meshes": [
+        "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@88b23",
+        "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@0842b",
+        "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@c6e33",
+        "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@e8415",
+        "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@c172e",
+        "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@181b3"
+      ],
+      "skeletons": [],
+      "textures": [],
+      "materials": [
+        "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@d8953",
+        "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@c23da",
+        "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@cbf5b",
+        "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@209f8",
+        "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@aeead"
+      ],
+      "scenes": [
+        "73a51ef0-2c3e-475a-80b2-ef23dbbabc09@da469"
+      ]
+    }
+  }
+}

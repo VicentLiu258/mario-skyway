@@ -1,0 +1,230 @@
+{
+  "Pip": {
+    "vertices": 6438,
+    "triangles": 12720,
+    "meshes": 6,
+    "gltfBoundsMin": [
+      -0.59,
+      0.0,
+      -0.48
+    ],
+    "gltfBoundsMax": [
+      0.59,
+      3.0792,
+      0.45
+    ],
+    "pivots": {
+      "Pip_Root": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "Body": [
+        0.0,
+        1.08,
+        -0.0
+      ],
+      "Arm_L": [
+        -0.39,
+        0.55,
+        -0.0
+      ],
+      "Arm_R": [
+        0.39,
+        0.55,
+        -0.0
+      ],
+      "Head": [
+        0.0,
+        0.71,
+        -0.0
+      ],
+      "Leg_L": [
+        -0.22,
+        0.82,
+        -0.0
+      ],
+      "Leg_R": [
+        0.22,
+        0.82,
+        -0.0
+      ]
+    },
+    "forward": "+Z",
+    "up": "+Y",
+    "source": "Created from procedural primitives in create_couriers.py",
+    "slideHeight": 1.1188,
+    "slideFloorClearance": 0.0532
+  },
+  "Moss": {
+    "vertices": 9398,
+    "triangles": 18572,
+    "meshes": 6,
+    "gltfBoundsMin": [
+      -0.6612,
+      0.0,
+      -0.3161
+    ],
+    "gltfBoundsMax": [
+      0.6612,
+      2.685,
+      0.465
+    ],
+    "pivots": {
+      "Moss_Root": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "Body": [
+        0.0,
+        1.08,
+        -0.0
+      ],
+      "Arm_L": [
+        -0.39,
+        0.55,
+        -0.0
+      ],
+      "Arm_R": [
+        0.39,
+        0.55,
+        -0.0
+      ],
+      "Head": [
+        0.0,
+        0.71,
+        -0.0
+      ],
+      "Leg_L": [
+        -0.22,
+        0.82,
+        -0.0
+      ],
+      "Leg_R": [
+        0.22,
+        0.82,
+        -0.0
+      ]
+    },
+    "forward": "+Z",
+    "up": "+Y",
+    "source": "Created from procedural primitives in create_couriers.py",
+    "slideHeight": 1.0986,
+    "slideFloorClearance": 0.1366
+  },
+  "Kite": {
+    "vertices": 8056,
+    "triangles": 15920,
+    "meshes": 6,
+    "gltfBoundsMin": [
+      -0.6595,
+      0.0,
+      -0.4628
+    ],
+    "gltfBoundsMax": [
+      0.6595,
+      2.7422,
+      0.533
+    ],
+    "pivots": {
+      "Kite_Root": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "Body": [
+        0.0,
+        1.08,
+        -0.0
+      ],
+      "Arm_L": [
+        -0.39,
+        0.55,
+        -0.0
+      ],
+      "Arm_R": [
+        0.39,
+        0.55,
+        -0.0
+      ],
+      "Head": [
+        0.0,
+        0.71,
+        -0.0
+      ],
+      "Leg_L": [
+        -0.22,
+        0.82,
+        -0.0
+      ],
+      "Leg_R": [
+        0.22,
+        0.82,
+        -0.0
+      ]
+    },
+    "forward": "+Z",
+    "up": "+Y",
+    "source": "Created from procedural primitives in create_couriers.py",
+    "slideHeight": 1.2204,
+    "slideFloorClearance": 0.0836
+  },
+  "Rook": {
+    "vertices": 4800,
+    "triangles": 9420,
+    "meshes": 6,
+    "gltfBoundsMin": [
+      -0.58,
+      0.0,
+      -0.445
+    ],
+    "gltfBoundsMax": [
+      0.605,
+      2.765,
+      0.3812
+    ],
+    "pivots": {
+      "Rook_Root": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "Body": [
+        0.0,
+        1.08,
+        -0.0
+      ],
+      "Arm_L": [
+        -0.39,
+        0.55,
+        -0.0
+      ],
+      "Arm_R": [
+        0.39,
+        0.55,
+        -0.0
+      ],
+      "Head": [
+        0.0,
+        0.71,
+        -0.0
+      ],
+      "Leg_L": [
+        -0.22,
+        0.82,
+        -0.0
+      ],
+      "Leg_R": [
+        0.22,
+        0.82,
+        -0.0
+      ]
+    },
+    "forward": "+Z",
+    "up": "+Y",
+    "source": "Created from procedural primitives in create_couriers.py",
+    "slideHeight": 1.0708,
+    "slideFloorClearance": 0.1139
+  }
+}

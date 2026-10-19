@@ -1,6 +1,6 @@
 """Copy the verified Cocos build into the versioned static deployment folder."""
 from pathlib import Path
-import shutil, hashlib, json
+import shutil, hashlib, json, subprocess, sys
 base=Path(__file__).resolve().parents[1]
 src=base/'cocos/build/web-desktop';dst=base/'web'
 version=json.loads((base/'package.json').read_text())['version']
@@ -11,6 +11,10 @@ if dst.exists():shutil.rmtree(dst)
 dst.mkdir()
 for p in files:
     out=dst/p.relative_to(src);out.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,out)
+original=base/'original'
+if (original/'web/index.html').exists():
+    subprocess.run([sys.executable,str(original/'tools/package_playables.py')],check=True)
+    shutil.copytree(original/'dist/playables',dst/'cloudpost')
 manifest={str(p.relative_to(dst)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(dst.rglob('*')) if p.is_file()}
 (base/'web-manifest.json').write_text(json.dumps({'version':version,'files':manifest},indent=2)+'\n')
 print(f'Prepared {len(files)} runtime files for v{version}')

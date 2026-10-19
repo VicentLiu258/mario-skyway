@@ -130,3 +130,9 @@ Vercel 项目：[mario-skyway](https://vercel.com/vicente-lius-projects/mario-sk
 4. 提交并推送 `main`，Vercel Git 集成自动构建并更新线上版本。
 
 `web/` 不包含源码映射文件；可编辑源文件保存在私有 GitHub 仓库。根域名仍由 GoDaddy 管理，游戏只使用 `mario` 子域名。
+
+## 原创上架版
+
+独立原创项目位于 `original/`，名为 **Cloudpost Dash · 云邮远征**，使用新建的兔子、青蛙、小鸟和机器人快递员模型。六关玩法与关节滑行动作保留，提供完整英文界面与 YouTube Playables SDK 适配。
+
+试玩：[Cloudpost Dash](https://mario.aiboomprompt.com/cloudpost/)。马力欧练习版仍在根地址。`original/dist/cloudpost-dash-playables.zip` 是可重新生成的专用资源包候选，不能把本项目源码 ZIP 当成平台游戏包。意向申请与平台认证状态请看 `original/README.md`。

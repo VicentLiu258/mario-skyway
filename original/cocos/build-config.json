@@ -1,0 +1,27 @@
+{
+  "name": "CloudpostDash",
+  "platform": "web-desktop",
+  "buildPath": "project://build",
+  "outputName": "web-desktop",
+  "startScene": "3954b46a-4d9d-4d65-9c76-9e7ae53d305c",
+  "scenes": [
+    {
+      "url": "db://assets/scenes/Skyway.scene",
+      "uuid": "3954b46a-4d9d-4d65-9c76-9e7ae53d305c"
+    }
+  ],
+  "debug": false,
+  "md5Cache": false,
+  "sourceMaps": false,
+  "packages": {
+    "web-desktop": {
+      "resolution": {
+        "width": 1280,
+        "height": 800
+      },
+      "polyfills": {
+        "asyncFunctions": true
+      }
+    }
+  }
+}

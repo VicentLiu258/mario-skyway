@@ -14,3 +14,11 @@ cocos/profiles/
 cocos/build/
 
 cocos/settings/v2/packages/information.json
+
+original/cocos/library/
+original/cocos/temp/
+original/cocos/local/
+original/cocos/profiles/
+original/cocos/build/
+original/cocos/settings/v2/packages/information.json
+original/dist/

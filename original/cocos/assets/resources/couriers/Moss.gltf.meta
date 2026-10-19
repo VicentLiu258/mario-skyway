@@ -1,0 +1,307 @@
+{
+  "ver": "2.3.14",
+  "importer": "gltf",
+  "imported": true,
+  "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c",
+  "files": [],
+  "subMetas": {
+    "82495": {
+      "importer": "gltf-scene",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@82495",
+      "displayName": "",
+      "id": "82495",
+      "name": "Moss.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "7544b": {
+      "importer": "gltf-mesh",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@7544b",
+      "displayName": "",
+      "id": "7544b",
+      "name": "Sphere.009.mesh",
+      "userData": {
+        "gltfIndex": 0,
+        "triangleCount": 2200
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "7869b": {
+      "importer": "gltf-mesh",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@7869b",
+      "displayName": "",
+      "id": "7869b",
+      "name": "Sphere.025.mesh",
+      "userData": {
+        "gltfIndex": 1,
+        "triangleCount": 2200
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "41ac8": {
+      "importer": "gltf-mesh",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@41ac8",
+      "displayName": "",
+      "id": "41ac8",
+      "name": "Cube.001.mesh",
+      "userData": {
+        "gltfIndex": 2,
+        "triangleCount": 3228
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "597d3": {
+      "importer": "gltf-mesh",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@597d3",
+      "displayName": "",
+      "id": "597d3",
+      "name": "Sphere.002.mesh",
+      "userData": {
+        "gltfIndex": 3,
+        "triangleCount": 5664
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "e6662": {
+      "importer": "gltf-mesh",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@e6662",
+      "displayName": "",
+      "id": "e6662",
+      "name": "Sphere.015.mesh",
+      "userData": {
+        "gltfIndex": 4,
+        "triangleCount": 2640
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "41e5c": {
+      "importer": "gltf-mesh",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@41e5c",
+      "displayName": "",
+      "id": "41e5c",
+      "name": "Sphere.031.mesh",
+      "userData": {
+        "gltfIndex": 5,
+        "triangleCount": 2640
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "92d32": {
+      "importer": "gltf-material",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@92d32",
+      "displayName": "",
+      "id": "92d32",
+      "name": "Moss / main.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "e91ec": {
+      "importer": "gltf-material",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@e91ec",
+      "displayName": "",
+      "id": "e91ec",
+      "name": "Moss / light.material",
+      "userData": {
+        "gltfIndex": 1
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "ff86f": {
+      "importer": "gltf-material",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@ff86f",
+      "displayName": "",
+      "id": "ff86f",
+      "name": "Moss / accent.material",
+      "userData": {
+        "gltfIndex": 2
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "8f64f": {
+      "importer": "gltf-material",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@8f64f",
+      "displayName": "",
+      "id": "8f64f",
+      "name": "Moss / soft.material",
+      "userData": {
+        "gltfIndex": 3
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "03b9e": {
+      "importer": "gltf-material",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@03b9e",
+      "displayName": "",
+      "id": "03b9e",
+      "name": "Moss / strap.material",
+      "userData": {
+        "gltfIndex": 4
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "5775c": {
+      "importer": "gltf-material",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@5775c",
+      "displayName": "",
+      "id": "5775c",
+      "name": "Moss / dark.material",
+      "userData": {
+        "gltfIndex": 5
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "c2795": {
+      "importer": "gltf-material",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@c2795",
+      "displayName": "",
+      "id": "c2795",
+      "name": "Moss / highlight.material",
+      "userData": {
+        "gltfIndex": 6
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "d230a": {
+      "importer": "gltf-material",
+      "uuid": "441a95fc-17ca-445a-9347-e3f0df8dda4c@d230a",
+      "displayName": "",
+      "id": "d230a",
+      "name": "Moss / midnight.material",
+      "userData": {
+        "gltfIndex": 7
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [],
+    "lods": {
+      "enable": false,
+      "hasBuiltinLOD": false,
+      "options": [
+        {
+          "screenRatio": 0.25,
+          "faceCount": 1
+        },
+        {
+          "screenRatio": 0.125,
+          "faceCount": 0.25
+        },
+        {
+          "screenRatio": 0.01,
+          "faceCount": 0.1
+        }
+      ]
+    },
+    "assetFinder": {
+      "meshes": [
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@7544b",
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@7869b",
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@41ac8",
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@597d3",
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@e6662",
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@41e5c"
+      ],
+      "skeletons": [],
+      "textures": [],
+      "materials": [
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@92d32",
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@e91ec",
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@ff86f",
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@8f64f",
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@03b9e",
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@5775c",
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@c2795",
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@d230a"
+      ],
+      "scenes": [
+        "441a95fc-17ca-445a-9347-e3f0df8dda4c@82495"
+      ]
+    }
+  }
+}
